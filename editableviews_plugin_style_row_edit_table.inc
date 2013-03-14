@@ -41,9 +41,20 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $errors = parent::validate();
 
     $relationship_handlers = $this->display->handler->get_handlers('relationship');
+    $field_handlers_grouped = $this->helper->get_editable_field_handlers_grouped();
+
     foreach ($relationship_handlers as $relationship_id => $relationship_handler) {
       // We don't care about required relationships.
       if ($relationship_handler->options['required']) {
+        continue;
+      }
+
+      //dsm($relationship_handler);
+
+      // We don't care if there are no editable fields on the relationship.
+      // TODO: figure out what is going on here with the alias!
+      $relationship_alias = isset($relationship_handler->alias) ? $relationship_handler->alias : $relationship_id;
+      if (empty($field_handlers_grouped[$relationship_alias])) {
         continue;
       }
 
@@ -517,6 +528,20 @@ class editableviews_style_helper {
       }
     }
     return $relationship_id;
+  }
+
+  /**
+   * Get editable field handlers grouped by relationship alias.
+   */
+  function get_editable_field_handlers_grouped() {
+    $editable_field_handlers = $this->plugin->get_edit_field_handlers();
+
+    $editable_field_handlers_grouped = array();
+    foreach ($editable_field_handlers as $field_handler_id => $field_handler) {
+      $relationship_alias = isset($field_handler->relationship) ? $field_handler->relationship : 'base';
+
+      $editable_field_handlers_grouped[$relationship_alias][$handler_id] = $handler;
+    }
   }
 
 }
