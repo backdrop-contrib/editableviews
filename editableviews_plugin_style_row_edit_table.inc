@@ -474,20 +474,36 @@ class editableviews_style_helper {
             )));
           }
 
+          // Get the relationship that the relationship is on, so we can then
+          // get the entity for that relationship.
+          if (isset($relationship_handler->relationship)) {
+            $relationship_relationship = $relationship_handler->relationship;
+          }
+          else {
+            $relationship_relationship = 'base';
+          }
+
           if ($relationship_handler->definition['editableviews_direction'] == 'forward') {
+            // Get the entity on our relationship\s reletaionship -- same
+            // as for reverse.
+            // Get the entity out of the imaginary Views grid that is on the same
+            // row as us, and in the $relationship_relationship relationship...
+            list($referring_entity_type, $referring_entity_id) = $result_indexes_reverse[$relationship_relationship][$index];
+            $referring_entity = $result_entities[$referring_entity_type][$referring_entity_id];
+
+            // Store this entity's details on the current, new entity, so that
+            // when (and if!) we save it, we can go and make the referring
+            // entity point to it.
+            $entity->editableviews_future_reference = array(
+              'entity_type' => $referring_entity_type,
+              'entity_id' => $referring_entity_id,
+              'field_name' => $relationship_handler->definition['field_name'],
+            );
           }
           else {
             // Would be nice to factor this out to a helper method, say
             // '$this->new_entity_set_reverse_connection()' but we'd need to
             // pass so many variables it's probably just as faffy.
-            // Get the relationship that the relationship is on, so we can then
-            // get the entity for that relationship.
-            if (isset($relationship_handler->relationship)) {
-              $relationship_relationship = $relationship_handler->relationship;
-            }
-            else {
-              $relationship_relationship = 'base';
-            }
 
             // Get the entity out of the imaginary Views grid that is on the same
             // row as us, and in the $relationship_relationship relationship...

@@ -131,4 +131,6 @@ function editableviews_field_views_data_alter(&$data, $field, $module) {
   $field_name = $field['field_name'] . '_target_id';
 
   $data[$table_name][$field_name]['relationship']['editableviews_direction'] = 'forward';
+  // This is mysteriously missing from Entityreference!
+  $data[$table_name][$field_name]['relationship']['field_name'] = $field['field_name'];
 }

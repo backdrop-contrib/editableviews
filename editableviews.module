@@ -252,6 +252,25 @@ function editableviews_entity_form_submit_save($form, &$form_state) {
       // Save the entity using Entity API.
       entity_save($entity_type, $entity);
 
+      // If the entity was a new one, and on a forward relationship, we need
+      // to set the referring entity to point to it. We can do this now that the
+      // new entity has been saved and has an id.
+      if (isset($entity->editableviews_future_reference)) {
+        list($new_entity_id, ) = entity_extract_ids($entity_type, $entity);
+
+        $referring_entity = $form_state['entities'][$entity->editableviews_future_reference['entity_type']][$entity->editableviews_future_reference['entity_id']];
+        $wrapper = entity_metadata_wrapper($entity->editableviews_future_reference['entity_type'], $referring_entity);
+
+        // Make the existing entity point to the new entity.
+        $relationship_field_name = $entity->editableviews_future_reference['field_name'];
+        $wrapper->{$relationship_field_name}->set($new_entity_id);
+
+        // This needs to be saved a second time, as there's no simple way we can
+        // guarantee the order we come to these in: they are in the order we
+        // encounter them going through the field handlers.
+        entity_save($entity->editableviews_future_reference['entity_type'], $referring_entity);
+      }
+
       // Show a confirmation message, which arguably could get pretty long
       // on a big View!
       // TODO: add an option for this.
