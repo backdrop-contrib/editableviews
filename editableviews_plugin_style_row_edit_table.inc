@@ -188,8 +188,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // to it in.
     $this->helper->connect_new_entities($result_entities, $result_indexes, $result_indexes_reverse);
 
-    dsm($result_entities, '$result_entities');
-    //return;
+    //dsm($result_entities, '$result_entities');
 
     // Load up the form render array.
     $this->get_form($result_entities, $result_indexes, $edit_field_handlers_grouped);
@@ -432,7 +431,7 @@ class editableviews_style_helper {
           // Get the relationship handler for the relationship alias.
           $relationship_id = $this->get_relationship_id_from_alias($relationship);
           $relationship_handler = $relationship_handlers[$relationship_id];
-          dsm($relationship_handler);
+          //dsm($relationship_handler);
 
           if (!isset($relationship_handler->definition['editableviews_direction'])) {
             // Well this is a problem.

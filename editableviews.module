@@ -238,7 +238,7 @@ function editableviews_entity_form_submit_build_values($form, &$form_state) {
  * entities which have their 'editableviews_needs_save' set to FALSE.
  */
 function editableviews_entity_form_submit_save($form, &$form_state) {
-  dsm($form_state['entities'], 'entities to save');
+  //dsm($form_state['entities'], 'entities to save');
   $entity_info = entity_get_info();
   foreach (array_keys($form_state['entities']) as $entity_type) {
     foreach ($form_state['entities'][$entity_type] as $entity_id => $entity) {
