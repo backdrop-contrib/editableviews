@@ -13,6 +13,26 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
    */
   public $editable = TRUE;
 
+  function option_definition() {
+    $options = parent::option_definition();
+
+    $options['textfield_size'] = array('default' => NULL);
+
+    return $options;
+  }
+
+  function options_form(&$form, &$form_state) {
+    parent::options_form($form, $form_state);
+
+    $form['textfield_size'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Textfield size'),
+      '#description' => t("The size of the textfield for this form element."),
+      '#default_value' => $this->options['textfield_size'],
+      '#size' => 6,
+    );
+  }
+
   /**
    * Return the entity type, which here is just 'node'.
    */
@@ -60,6 +80,7 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
       // The title might not be set in the case where we're on a non-required
       // relationship with empty data.
       '#default_value' => isset($entity->title) ? $entity->title : '',
+      '#size' => $this->options['textfield_size'],
       '#maxlength' => 255,
     );
   }
