@@ -546,7 +546,7 @@ class editableviews_style_helper {
         $relationship_id = 'base';
       }
 
-      $editable_field_handlers_grouped[$relationship_id][$handler_id] = $field_handler;
+      $editable_field_handlers_grouped[$relationship_id][$field_handler_id] = $field_handler;
     }
 
     return $editable_field_handlers_grouped;
