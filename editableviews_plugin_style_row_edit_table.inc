@@ -42,6 +42,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
 
     $relationship_handlers = $this->display->handler->get_handlers('relationship');
     $field_handlers_grouped = $this->helper->get_editable_field_handlers_grouped();
+    //dsm($field_handlers_grouped);
 
     foreach ($relationship_handlers as $relationship_id => $relationship_handler) {
       // We don't care about required relationships.
@@ -52,10 +53,14 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
       //dsm($relationship_handler);
 
       // We don't care if there are no editable fields on the relationship.
-      // TODO: figure out what is going on here with the alias!
-      $relationship_alias = isset($relationship_handler->alias) ? $relationship_handler->alias : $relationship_id;
-      if (empty($field_handlers_grouped[$relationship_alias])) {
+      if (empty($field_handlers_grouped[$relationship_id])) {
         continue;
+      }
+
+      if (!isset($relationship_handler->definition['editableviews_direction'])) {
+        $errors[] = t("The relationship '@relationship' is not compatible with editable fields that may cause creation of entities for empty data. The relationship should be set to be 'required'.", array(
+          '@relationship' => $relationship_handler->options['label']
+        ));
       }
 
       if (!isset($this->options['relationship_creation_bundle'][$relationship_id])) {
@@ -64,10 +69,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
           '@relationship' => $relationship_handler->options['label']
         ));
       }
-
-      // TODO:
-      //  - a non-required rel, which has editable fields on it, MUST have in its
-      //    defintion the 'direction' of the relationship (our property)
     }
 
     return $errors;
@@ -531,17 +532,24 @@ class editableviews_style_helper {
   }
 
   /**
-   * Get editable field handlers grouped by relationship alias.
+   * Get editable field handlers grouped by relationship id.
    */
   function get_editable_field_handlers_grouped() {
     $editable_field_handlers = $this->plugin->get_edit_field_handlers();
 
     $editable_field_handlers_grouped = array();
     foreach ($editable_field_handlers as $field_handler_id => $field_handler) {
-      $relationship_alias = isset($field_handler->relationship) ? $field_handler->relationship : 'base';
+      //dsm($field_handler, '$field_handler');
+      $relationship_id = $field_handler->options['relationship'];
+      if ($relationship_id == 'none') {
+        // TODO: tidy up this WTF!
+        $relationship_id = 'base';
+      }
 
-      $editable_field_handlers_grouped[$relationship_alias][$handler_id] = $handler;
+      $editable_field_handlers_grouped[$relationship_id][$handler_id] = $field_handler;
     }
+
+    return $editable_field_handlers_grouped;
   }
 
 }
