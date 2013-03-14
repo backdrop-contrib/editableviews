@@ -37,9 +37,30 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $this->helper->options_form($form, $form_state);
   }
 
-  // validate:
-  //  - a non-required rel, which has editable fields on it, MUST have in its
-  //    defintion the 'direction' of the relationship (our property)
+  function validate() {
+    $errors = parent::validate();
+
+    $relationship_handlers = $this->display->handler->get_handlers('relationship');
+    foreach ($relationship_handlers as $relationship_id => $relationship_handler) {
+      // We don't care about required relationships.
+      if ($relationship_handler->options['required']) {
+        continue;
+      }
+
+      if (!isset($this->options['relationship_creation_bundle'][$relationship_id])) {
+        $errors[] = t("Display @display is set to use a editable fields and the '@relationship' relationship is not set to be required: the bundle of entities to create on this relationship must be set in the Editable Table options.", array(
+          '@display' => $this->display->display_title,
+          '@relationship' => $relationship_handler->options['label']
+        ));
+      }
+
+      // TODO:
+      //  - a non-required rel, which has editable fields on it, MUST have in its
+      //    defintion the 'direction' of the relationship (our property)
+    }
+
+    return $errors;
+  }
 
   /**
    * Helper to get the handlers for editable fields.
