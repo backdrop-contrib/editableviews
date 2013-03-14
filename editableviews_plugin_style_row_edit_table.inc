@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin class for the Row Edit Table style.
+ * Plugin class for the Editable Table style.
  */
 class editableviews_plugin_style_row_edit_table extends views_plugin_style_table {
 
@@ -28,7 +28,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
   }
 
   /**
-   * Render the given style.
+   * The options form for the given style.
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
