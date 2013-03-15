@@ -65,11 +65,10 @@ function editableviews_forms($form_id, $args) {
  * @param $field_handlers
  *  An array of the editable Views field handlers to show the form elements for.
  *  This should be grouped by relationship, with 'base' for the view's base.
- * @param $view_name
- * @param $display_name
- *  The name of the view and the display, respectively.
+ * @param $view
+ *  The view object.
  */
-function editableviews_entity_form($form, &$form_state, $entities, $result_indexes, $field_handlers, $view_name, $display_name) {
+function editableviews_entity_form($form, &$form_state, $entities, $result_indexes, $field_handlers, $view) {
   // Include this here as it's fairly likely we have handlers that need it;
   // rather than let the handler class include it over and over again.
   ctools_include('fields');
@@ -85,8 +84,11 @@ function editableviews_entity_form($form, &$form_state, $entities, $result_index
   $form['#field_handlers'] = $field_handlers;
 
   // Put the view name and display name on the form, for hook_form_alter().
-  $form['#view_name'] = $view_name;
-  $form['#view_display_name'] = $display_name;
+  $form['#view_name'] = $view->name;
+  $form['#view_display_name'] = $view->current_display;
+
+  // Get the message option from the view style plugin.
+  $form['#save_messages'] = $view->style_plugin->options['save_messages'];
 
   foreach (array_keys($entities) as $entity_type) {
     foreach ($entities[$entity_type] as $entity_id => $entity) {
@@ -271,14 +273,25 @@ function editableviews_entity_form_submit_save($form, &$form_state) {
         entity_save($entity->editableviews_future_reference['entity_type'], $referring_entity);
       }
 
-      // Show a confirmation message, which arguably could get pretty long
-      // on a big View!
-      // TODO: add an option for this.
-      drupal_set_message(t("Saved %entity-type entity %label.", array(
-        '%entity-type' => $entity_info[$entity_type]['label'],
-        '%label' => entity_label($entity_type, $entity),
-      )));
+      if ($form['#save_messages'] == 'individual') {
+        // Show a confirmation message. This could get pretty long on a big View!
+        drupal_set_message(t("Saved %entity-type entity %label.", array(
+          '%entity-type' => $entity_info[$entity_type]['label'],
+          '%label' => entity_label($entity_type, $entity),
+        )));
+      }
+      elseif ($form['#save_messages'] == 'summary') {
+        // Use drupal_placeholder() to format this the same as %label above.
+        $save_message_labels[] = drupal_placeholder(entity_label($entity_type, $entity));
+      }
     }
+  }
+
+  if ($form['#save_messages'] == 'summary' && count($save_message_labels)) {
+    drupal_set_message(t("Saved entities !labels.", array(
+      // These have been sanitized already.
+      '!labels' => implode(', ', $save_message_labels),
+    )));
   }
 }
 

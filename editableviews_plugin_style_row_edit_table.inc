@@ -23,6 +23,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // is apparently not always there, if Views code with the same
     // pattern is anything to go by!
     $options['relationship_creation_bundle'] = array('default' => array());
+    $options['save_messages'] = array('default' => 'individual');
 
     return $options;
   }
@@ -271,7 +272,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $form_id = 'editableviews_entity_form' . '_' . $this->view->name;
 
     // We store this rather than return it, as it's used in different places.
-    $this->form = drupal_get_form($form_id, $entities, $result_indexes, $edit_field_handlers, $this->view->name, $this->view->current_display);
+    $this->form = drupal_get_form($form_id, $entities, $result_indexes, $edit_field_handlers, $this->view);
   }
 
   /**
@@ -379,6 +380,18 @@ class editableviews_style_helper {
         $form['relationship_creation_bundle'][$relationship_id]['#default_value'] = $this->plugin->options['relationship_creation_bundle'][$relationship_id];
       }
     }
+
+    $form['save_messages'] = array(
+      '#type' => 'select',
+      '#title' => t("Save messages"),
+      '#description' => t('The messages to show the user when the view form is saved.'),
+      '#options' => array(
+        'none' => t('Show no messages'),
+        'summary' => t('Show a single message summarizing the changes'),
+        'individual' => t('Show a message for each saved entity'),
+      ),
+      '#default_value' => $this->plugin->options['save_messages'],
+    );
   }
 
   /**
