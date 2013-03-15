@@ -526,7 +526,6 @@ class editableviews_style_helper {
             $referred_entity = $result_entities[$referred_entity_type][$referred_entity_id];
 
             // From here on, this is just reverse relationships!
-            // Forward relationships are TODO!
             $wrapper = entity_metadata_wrapper($entity_type, $entity);
 
             // This is what we need to set on the new entity in a reverse relationship.
@@ -547,8 +546,8 @@ class editableviews_style_helper {
    * the relationship handlers array is keyed by id, and the only way AFAICT
    * to get from one to the other is to faffily iterate.
    *
-   * @TODO: file a patch on Views for this to be made easier!
-   * see http://drupal.org/node/1941976
+   * @TODO: seems this can be ditched; just use
+   * $field_handler->options['relationship']!!
    */
   function get_relationship_id_from_alias($relationship_alias) {
     $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
