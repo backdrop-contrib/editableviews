@@ -417,9 +417,16 @@ class editableviews_style_helper {
       // TODO: cloud cuckoo land, but a form element field to specify
       // the bundle for each row would be nice!
       $bundle_key => $this->plugin->options['relationship_creation_bundle'][$relationship_id],
-      // TODO: is there a way to set uid on nodes? otherwise, we get
-      // anonymous nodes getting created!
     );
+
+    // Just a little bit of sugar to save this having to be done in a custom
+    // form submit handler: for nodes and comments, set the uid property
+    // to the current user. We would do this with anything that has a uid
+    // property, but entity_get_property_info() calls it 'author' and it's just
+    // starting to get faffy now.
+    if ($entity_type == 'node' || $entity_type == 'comment') {
+      $values['uid'] = $GLOBALS['user']->uid;
+    }
 
     $entity = entity_create($entity_type, $values);
 
