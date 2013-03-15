@@ -489,14 +489,6 @@ class editableviews_style_helper {
           $relationship_handler = $relationship_handlers[$relationship_id];
           //dsm($relationship_handler);
 
-          if (!isset($relationship_handler->definition['editableviews_direction'])) {
-            // Well this is a problem.
-            // TODO: validation on the view for this!
-            throw new Exception(t('Entity creation is not supported on the relationship %label', array(
-              '%label' => $relationship_handler->options['label'],
-            )));
-          }
-
           // Get the relationship that the relationship is on, so we can then
           // get the entity for that relationship.
           if (isset($relationship_handler->relationship)) {
