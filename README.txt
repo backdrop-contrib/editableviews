@@ -1,7 +1,7 @@
 Editable Views
 ==============
 
-Editable Views lets you create Views where the fields can be edited. Fields show both the current value and a form to edit it. A 'Save' button allows saving of all the entities shown in the View.
+Editable Views lets you create Views where the fields can be edited. Fields show both the current value and a form to edit it. A 'Save' button allows saving of all the entities shown in the View (this is compatible with having exposed filters on the View).
 
 Editable fields can be added on the base entity as well as on entities brought into the View by a relationship. Other, non-editable fields may be added to the View, in which case they function normally.
 
@@ -13,7 +13,7 @@ If a relationship is 'non-required', then it can bring empty data to the View. I
 
 Currently the following relationships are supported for creating new entities:
 - backward reference relationship on entityreference fields
-- TODO: forward relationships on entityreference fields
+- forward relationships on entityreference fields
 
 Usage
 -----
@@ -24,7 +24,4 @@ Usage
 Developer documentation
 -----------------------
 
-TODO:
-
-- adding custom form submit handlers to change the entities prior to saving.
-- how to create an editable field handler.
+See the documentation page on drupal.org for developer documentation.
