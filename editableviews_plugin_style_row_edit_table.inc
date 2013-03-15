@@ -342,42 +342,45 @@ class editableviews_style_helper {
       $edit_relationship_handlers[$relationship_id] = $relationship_handlers[$relationship_id];
     }
 
-    $form['relationship_creation_bundle'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Relationship entity creation bundles'),
-      '#description' => t('A relationship which is set to not required may produce empty form elements, which thus require the creation of a new entity if populated with data. The bundle for these new entities must be specified here.'),
-      '#weight' => -1,
-    );
-
-    foreach ($edit_relationship_handlers as $relationship_id => $relationship_handler) {
-      // The 'base' of a relationship is the table it brings.
-      $table = $relationship_handler->definition['base'];
-      // Get the entity type from the table.
-      $table_data = views_fetch_data($table);
-      $entity_type = $table_data['table']['entity type'];
-      $entity_info = entity_get_info($entity_type);
-
-      $options = array();
-      foreach ($entity_info['bundles'] as $bundle => $bundle_info) {
-        $options[$bundle] = $bundle_info['label'];
-      }
-
-      $form['relationship_creation_bundle'][$relationship_id] = array(
-        '#type' => 'select',
-        '#title' => t('Bundle for new entities created on %label', array(
-          '%label' => $relationship_handler->options['label'],
-        )),
-        '#description' => t('Select the %entity entity bundle for entities created on this relationship.', array(
-          '%entity' => $entity_info['label'],
-        )),
-        '#options' => $options,
-        '#required' => TRUE,
+    // Only show this fieldset if there are relationships to consider.
+    if (count($edit_relationship_handlers)) {
+      $form['relationship_creation_bundle'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Relationship entity creation bundles'),
+        '#description' => t('A relationship which is set to not required may produce empty form elements, which thus require the creation of a new entity if populated with data. The bundle for these new entities must be specified here.'),
+        '#weight' => -1,
       );
-      // We have to check the default value, as the key in the array is variable
-      // because it's the relationship handler ID. That means that Views won't
-      // have it set in option_definition().
-      if (isset($this->plugin->options['relationship_creation_bundle'][$relationship_id])) {
-        $form['relationship_creation_bundle'][$relationship_id]['#default_value'] = $this->plugin->options['relationship_creation_bundle'][$relationship_id];
+
+      foreach ($edit_relationship_handlers as $relationship_id => $relationship_handler) {
+        // The 'base' of a relationship is the table it brings.
+        $table = $relationship_handler->definition['base'];
+        // Get the entity type from the table.
+        $table_data = views_fetch_data($table);
+        $entity_type = $table_data['table']['entity type'];
+        $entity_info = entity_get_info($entity_type);
+
+        $options = array();
+        foreach ($entity_info['bundles'] as $bundle => $bundle_info) {
+          $options[$bundle] = $bundle_info['label'];
+        }
+
+        $form['relationship_creation_bundle'][$relationship_id] = array(
+          '#type' => 'select',
+          '#title' => t('Bundle for new entities created on %label', array(
+            '%label' => $relationship_handler->options['label'],
+          )),
+          '#description' => t('Select the %entity entity bundle for entities created on this relationship.', array(
+            '%entity' => $entity_info['label'],
+          )),
+          '#options' => $options,
+          '#required' => TRUE,
+        );
+        // We have to check the default value, as the key in the array is variable
+        // because it's the relationship handler ID. That means that Views won't
+        // have it set in option_definition().
+        if (isset($this->plugin->options['relationship_creation_bundle'][$relationship_id])) {
+          $form['relationship_creation_bundle'][$relationship_id]['#default_value'] = $this->plugin->options['relationship_creation_bundle'][$relationship_id];
+        }
       }
     }
 
