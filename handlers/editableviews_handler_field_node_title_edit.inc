@@ -13,14 +13,6 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
    */
   public $editable = TRUE;
 
-  function init(&$view, &$options) {
-    parent::init($view, $options);
-
-    // We always need the nid field; our parent class only adds it
-    // conditionally.
-    $this->additional_fields['nid'] = array('table' => 'node', 'field' => 'nid');
-  }
-
   function option_definition() {
     $options = parent::option_definition();
 
