@@ -148,51 +148,30 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
       $edit_fields[$handler_id] = $handler->definition['field_name'];
     }
 
-    // Build an array of entities that we should be working with.
-    // It is up to each handler to implement get_entity_type() and get_entity(),
-    // and thus tell us the entity it is working on for the current row.
-    // This is because with relationships, each handler could be working on a
-    // different entity.
+    // Build an array of entities that we should be working with. We load the
+    // that are implicit in the view result, creating new ones if there are any
+    // gaps.
+    // The entity ID fields have been added to the view result by query().
     $result_entities = array();
-    foreach ($result as $index => $result) {
-      foreach ($edit_field_handlers as $handler_id => $handler) {
-        // We ask each field handler to tell us the entity type it works on, and
-        // to give us its entity for the current result row.
-        // This will lead to duplication for fields that are on the same
-        // relationship. Ideally, the entity would be obtained from each
-        // relationship (and the view base of course).
-        $entity_type = $handler->get_entity_type();
-        $entity = $handler->get_entity($result);
+    foreach ($result as $index => $result_row) {
+      foreach ($this->helper->relationship_entity_fields as $relationship_id => $relationship_entity_data) {
+        $entity_type = $relationship_entity_data['entity_type'];
+        // Get the entity ID out of the result.
+        $entity_id = $result_row->{$relationship_entity_data['id_field_alias']};
 
-        if (isset($entity)) {
-          list($entity_id, ) = entity_extract_ids($entity_type, $entity);
+        if (isset($entity_id)) {
+          $entity = entity_load_single($entity_type, $entity_id);
         }
         else {
           // If there is no entity, we create one (i.e., make the object without
           // saving it). We give this a fake entity id, composed of the
-          // relationship handler alias and the index so it's unique.
-          $entity_id = $handler->relationship . ':' . $index;
+          // relationship handler id and the index so it's unique.
+          $entity_id = $relationship_id . ':' . $index;
 
-          // Only create a new entity if we haven't already for this
-          // relationship and index.
-          if (!isset($result_indexes_reverse[$handler->relationship][$index])) {
-            $entity = $this->helper->entity_create($handler);
-          }
-          else {
-            // We've already made this one. Pick it up so we can work on it.
-            $entity = $result_entities[$entity_type][$entity_id];
-          }
-
-          // Add the field_name for this field handler to the list on the entity
-          // which keeps track of them.
-          $entity->editableviews_exposed_fields[] = $handler->definition['field_name'];
+          $entity = $this->helper->entity_create($relationship_id);
         }
 
-        // We need to remember a bunch of different things to work with later...
-
-        // Build an array of the entities, nested first by entity type
-        // and then by entity ID, as we could have multiple entities of
-        // the same or different types on the same result row.
+        // Build an array of entities we work with.
         $result_entities[$entity_type][$entity_id] = $entity;
 
         // Build a lookup from entity type and entity to the result row index
@@ -201,22 +180,43 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         // the index gives the row, and the relationship gives the column(s).
         // This is for the form builder to be able to get to the right result
         // row and to know which handlers to get form elements from.
-        $relationship = isset($handler->relationship) ? $handler->relationship : 'base';
-        $result_indexes[$entity_type][$entity_id] = array($relationship, $index);
+        $result_indexes[$entity_type][$entity_id] = array($relationship_id, $index);
 
         // Build a lookup array of the same coordinates, but towards the entity:
-        // keys are index then relationship, values are entity type and entity.
-        $result_indexes_reverse[$relationship][$index] = array($entity_type, $entity_id);
+        // keys are relationship ID then index, values are entity type and entity.
+        $result_indexes_reverse[$relationship_id][$index] = array($entity_type, $entity_id);
+      }
+    }
+    //dsm($result_entities, '$result_entities');
+    //dsm($result_indexes_reverse, '$result_indexes_reverse');
+
+    // Build up some lookups pertaining to field handlers, and set the editable
+    // fields on new entities.
+    $result_entity_ids = array();
+    foreach ($result as $index => $result_row) {
+      foreach ($edit_field_handlers as $handler_id => $handler) {
+        // Get the entity type and entity for this field handler from the
+        // relationship lookup.
+        $field_handler_relationship_id = $handler->options['relationship'];
+
+        // Add the field_name for this field handler to the list on the entity
+        // which keeps track of them.
+        list($entity_type, $entity_id) = $result_indexes_reverse[$field_handler_relationship_id][$index];
+        if (!is_numeric($entity_id)) {
+          $entity = $result_entities[$entity_type][$entity_id];
+          $entity->editableviews_exposed_fields[] = $handler->definition['field_name'];
+        }
 
         // Build a lookup array from index and field handler to the entity type
         // and entity. This is to get to the right form element to include when
         // we finally render our fields.
-        $result_entity_ids[$index][$handler_id] = array($entity_type, $entity_id);
+        // Just get the entity coordinates from the relationship lookup.
+        $result_entity_ids[$index][$handler_id] = $result_indexes_reverse[$field_handler_relationship_id][$index];
 
-        // Build an array of handlers grouped by relationship.
+        // Build an array of handlers grouped by relationship ID.
         // This is for the form builder to only work on the handlers that are
         // relevant to the entity's relationship.
-        $edit_field_handlers_grouped[$relationship][$handler_id] = $handler;
+        $edit_field_handlers_grouped[$field_handler_relationship_id][$handler_id] = $handler;
       }
     }
 
@@ -494,23 +494,24 @@ class editableviews_style_helper {
   }
 
   /**
-   * Returns a new (unsaved) entity for the given field handler.
+   * Returns a new (unsaved) entity for the given relationship ID.
    *
-   * This is needed when the field handler is on a non-required relationship,
-   * and a particular result row has no data there. We create a new entity for
-   * FieldAPI to work on, and potentially save it on submission if the user
-   * enters data.
+   * This is needed when editable field handlers are on a non-required
+   * relationship, and a particular result row has no data there. We create a
+   * new entity for FieldAPI to work on, and potentially save it on submission
+   * if the user enters data.
    *
-   * @param $field_handler
-   *  An editable field handler from the view.
+   * @param $relationship_id
+   *  The id of the relationship that requires a new entity.
    *
    * @return
    *  A new, unsaved entity. The entity type is implied by the handler, and
    *  should be known by the caller. The bundle will be set on this, given by
    *  the style plugin's options.
    */
-  function entity_create($field_handler) {
-    $entity_type = $field_handler->get_entity_type();
+  function entity_create($relationship_id) {
+    $entity_type = $this->relationship_entity_fields[$relationship_id]['entity_type'];
+
     // This is complex. We know the entity type, but we need to be told
     // the bundle: that's one for the plugin settings.
     // Then when it's created, we need to know how to set the relationship
@@ -519,8 +520,6 @@ class editableviews_style_helper {
     // Assume this exists, as it must do if the entity is fieldable, and
     // if your entity is not fieldable, what are you doing here? ;)
     $bundle_key = $entity_info['entity keys']['bundle'];
-
-    $relationship_id = $this->get_relationship_id_from_alias($field_handler->relationship);
 
     $values = array(
       // The bundle of the new entity is set in the options for this
@@ -579,9 +578,7 @@ class editableviews_style_helper {
         // New entities have a non-numeric fake id we just gave them.
         if (!is_numeric($entity_id)) {
           // Get the views coordinates for this entity.
-          list($relationship, $index) = $result_indexes[$entity_type][$entity_id];
-          // Get the relationship handler for the relationship alias.
-          $relationship_id = $this->get_relationship_id_from_alias($relationship);
+          list($relationship_id, $index) = $result_indexes[$entity_type][$entity_id];
           $relationship_handler = $relationship_handlers[$relationship_id];
           //dsm($relationship_handler);
 
@@ -591,7 +588,7 @@ class editableviews_style_helper {
             $relationship_relationship = $relationship_handler->relationship;
           }
           else {
-            $relationship_relationship = 'base';
+            $relationship_relationship = $this->plugin->view->base_table;
           }
 
           if ($relationship_handler->definition['editableviews_direction'] == 'forward') {

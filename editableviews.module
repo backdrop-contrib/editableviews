@@ -64,7 +64,8 @@ function editableviews_forms($form_id, $args) {
  *  columns.
  * @param $field_handlers
  *  An array of the editable Views field handlers to show the form elements for.
- *  This should be grouped by relationship, with 'base' for the view's base.
+ *  This should be grouped by relationship ID, with the base table for the
+ *  view's base.
  * @param $view
  *  The view object.
  */
