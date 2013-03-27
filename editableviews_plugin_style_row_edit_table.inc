@@ -643,28 +643,6 @@ class editableviews_style_helper {
   }
 
   /**
-   * Get the relationship ID for a relationship alias.
-   *
-   * This is needed because $field_handler->relationship is an alias, but
-   * the relationship handlers array is keyed by id, and the only way AFAICT
-   * to get from one to the other is to faffily iterate.
-   *
-   * @TODO: seems this can be ditched; just use
-   * $field_handler->options['relationship']!!
-   */
-  function get_relationship_id_from_alias($relationship_alias) {
-    $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
-    foreach ($relationship_handlers as $relationship_id => $relationship_handler) {
-      // TODO! have to account for BASE!!!!!
-      // except is this ever called for a base???
-      if ($relationship_handler->alias == $relationship_alias) {
-        break;
-      }
-    }
-    return $relationship_id;
-  }
-
-  /**
    * Get editable field handlers grouped by relationship id.
    */
   function get_editable_field_handlers_grouped() {
