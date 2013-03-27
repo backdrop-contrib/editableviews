@@ -144,9 +144,20 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // The keys are the id keys of the Views handlers.
     // For non-field-API fields, the definition must include this property.
     $edit_fields = array();
+    // Create the keys in this so they exist even for relationships with no
+    // editable fields.
+    $edit_field_handlers_grouped = array_fill_keys(array_keys($relationship_handlers), array());
+    $edit_field_handlers_grouped[$this->view->base_table] = array();
+
     foreach ($edit_field_handlers as $handler_id => $handler) {
       //dsm($handler, "field handler $handler_id");
       $edit_fields[$handler_id] = $handler->definition['field_name'];
+
+      // Build an array of handlers grouped by relationship ID.
+      // This is for the form builder to only work on the handlers that are
+      // relevant to the entity's relationship.
+      $field_handler_relationship_id = $handler->options['relationship'];
+      $edit_field_handlers_grouped[$field_handler_relationship_id][$handler_id] = $handler;
     }
 
     // Build an array of entities that we should be working with. We load the
@@ -154,7 +165,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // gaps.
     // The entity ID fields have been added to the view result by query().
     $result_entities = array();
-    $edit_field_handlers_grouped = array();
     foreach ($result as $index => $result_row) {
       foreach ($this->helper->relationship_entity_fields as $relationship_id => $relationship_entity_data) {
         $entity_type = $relationship_entity_data['entity_type'];
@@ -187,10 +197,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         // Build a lookup array of the same coordinates, but towards the entity:
         // keys are relationship ID then index, values are entity type and entity.
         $result_indexes_reverse[$relationship_id][$index] = array($entity_type, $entity_id);
-
-        // Just create the keys in this so they exist even for relationships
-        // with no editable fields.
-        $edit_field_handlers_grouped[$relationship_id] = array();
       }
     }
     //dsm($result_entities, '$result_entities');
@@ -218,11 +224,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         // we finally render our fields.
         // Just get the entity coordinates from the relationship lookup.
         $result_entity_ids[$index][$handler_id] = $result_indexes_reverse[$field_handler_relationship_id][$index];
-
-        // Build an array of handlers grouped by relationship ID.
-        // This is for the form builder to only work on the handlers that are
-        // relevant to the entity's relationship.
-        $edit_field_handlers_grouped[$field_handler_relationship_id][$handler_id] = $handler;
       }
     }
     //dsm($result_entity_ids, '$result_entity_ids');
