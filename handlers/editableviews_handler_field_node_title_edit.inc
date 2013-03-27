@@ -13,14 +13,6 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
    */
   public $editable = TRUE;
 
-  function init(&$view, &$options) {
-    parent::init($view, $options);
-
-    // We always need the nid field; our parent class only adds it
-    // conditionally.
-    $this->additional_fields['nid'] = array('table' => 'node', 'field' => 'nid');
-  }
-
   function option_definition() {
     $options = parent::option_definition();
 
@@ -39,34 +31,6 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
       '#default_value' => $this->options['textfield_size'],
       '#size' => 6,
     );
-  }
-
-  /**
-   * Return the entity type, which here is just 'node'.
-   */
-  function get_entity_type() {
-    return 'node';
-  }
-
-  /**
-   * Return the entity for the view's current result row.
-   *
-   * @param $result
-   *  A result row for the current view.
-   *
-   * @return
-   *  The entity that this handler should present a field for, or NULL if there
-   *  is no entity to return. This will be the case if the field handler is on
-   *  a non-required relationship and there is no data for the relationship.
-   */
-  function get_entity($result) {
-    // Our parent class ensures we have the nid field.
-    $nid = $this->get_value($result, 'nid');
-    if (isset($nid)) {
-      // We know we're working with nodes.
-      $node = node_load($nid);
-      return $node;
-    }
   }
 
   /**
