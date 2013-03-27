@@ -132,6 +132,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    *   The result array from $view->result
    */
   function insert_form_elements($result) {
+    //dsm($result, '$result');
     // Get our edit field handlers.
     $edit_field_handlers = $this->get_edit_field_handlers();
     //dsm($edit_field_handlers, '$edit_field_handlers');
@@ -219,6 +220,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         $edit_field_handlers_grouped[$field_handler_relationship_id][$handler_id] = $handler;
       }
     }
+    //dsm($result_entity_ids, '$result_entity_ids');
 
     // Now we have built up all our entities, go over them again and add
     // the connecting properties to any new ones.
@@ -231,8 +233,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // Here we figure out the id we need to point to, and the property to point
     // to it in.
     $this->helper->connect_new_entities($result_entities, $result_indexes, $result_indexes_reverse);
-
-    //dsm($result_entities, '$result_entities');
+    //dsm($result_entities, '$result_entities post connect');
 
     // Load up the form render array.
     $this->get_form($result_entities, $result_indexes, $edit_field_handlers_grouped);
@@ -490,7 +491,7 @@ class editableviews_style_helper {
         'id_field_alias' => $entity_id_field_alias,
       );
     }
-    dsm($this->relationship_entity_fields);
+    //dsm($this->relationship_entity_fields);
   }
 
   /**
