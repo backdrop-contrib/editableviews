@@ -179,6 +179,11 @@ function editableviews_entity_form_validate($form, &$form_state) {
 /**
  * Form submit handler the first: build entities from field values.
  *
+ * Entities are flagged as needing to be saved by our other submit handler,
+ * editableviews_entity_form_submit_save().
+ *
+ * Existing entities are flagged if they have editable fields on them.
+ *
  * New entities are checked to see whether they need to be saved or not. This
  * allows the user to leave a new entity's form elements empty to indicate they
  * do not wish to create an entity in that space.
@@ -202,14 +207,23 @@ function editableviews_entity_form_submit_build_values($form, &$form_state) {
       $entity = $form[$entity_type][$entity_id]['#entity'];
       $relationship = $form[$entity_type][$entity_id]['#views_relationship'];
 
-      // Invoke the field handlers on the relationship the entity is on.
+      // Invoke the field handlers on the relationship the entity is on, if any.
       foreach ($field_handlers[$relationship] as $field_handler) {
         $field_handler->edit_form_submit($entity_type, $entity, $form[$entity_type][$entity_id], $form_state);
       }
 
-      // For new entities, check they have had values set on them by the user
-      // that justify saving them.
-      if (!is_numeric($entity_id)) {
+      // Set our flag on the entity if it needs to be saved.
+      if (is_numeric($entity_id)) {
+        // For existing entities, we save if the entity had editable fields
+        // in the view. This does mean that an entity could be saved needlessly,
+        // as we don't compare old values with incoming form values.
+        if (count($field_handlers[$relationship])) {
+          $entity->editableviews_needs_save = TRUE;
+        }
+      }
+      else {
+        // For new entities, check they have had values set on them by the user
+        // that justify saving them.
         $wrapper = entity_metadata_wrapper($entity_type, $entity);
         foreach ($entity->editableviews_exposed_fields as $expected_field_name) {
           // We have to use the wrapper, as FieldAPI fields will contain a
@@ -245,11 +259,9 @@ function editableviews_entity_form_submit_save($form, &$form_state) {
   $entity_info = entity_get_info();
   foreach (array_keys($form_state['entities']) as $entity_type) {
     foreach ($form_state['entities'][$entity_type] as $entity_id => $entity) {
-      // For new entities, check a save has been requested.
-      if (!is_numeric($entity_id)) {
-        if (!$entity->editableviews_needs_save) {
-          continue;
-        }
+      // Check whether a save has been requested.
+      if (empty($entity->editableviews_needs_save)) {
+        continue;
       }
 
       // Save the entity using Entity API.
