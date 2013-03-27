@@ -34,34 +34,6 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
   }
 
   /**
-   * Return the entity type, which here is just 'node'.
-   */
-  function get_entity_type() {
-    return 'node';
-  }
-
-  /**
-   * Return the entity for the view's current result row.
-   *
-   * @param $result
-   *  A result row for the current view.
-   *
-   * @return
-   *  The entity that this handler should present a field for, or NULL if there
-   *  is no entity to return. This will be the case if the field handler is on
-   *  a non-required relationship and there is no data for the relationship.
-   */
-  function get_entity($result) {
-    // Our parent class ensures we have the nid field.
-    $nid = $this->get_value($result, 'nid');
-    if (isset($nid)) {
-      // We know we're working with nodes.
-      $node = node_load($nid);
-      return $node;
-    }
-  }
-
-  /**
    * Return the edit form for the field.
    */
   function edit_form($entity_type, $entity, &$element, &$form_state) {

@@ -65,40 +65,6 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
   }
 
   /**
-   * Return the entity type this handler's field is on.
-   *
-   * While this can be deduced from the handler object, we use this method so
-   * that non-FieldAPI fields can have editable handlers.
-   */
-  function get_entity_type() {
-    return $this->definition['entity_tables'][$this->get_base_table()];
-  }
-
-  /**
-   * Return the entity for the view's current result row.
-   *
-   * @param $result
-   *  A result row for the current view.
-   *
-   * @return
-   *  The entity that this handler should present a field for, or NULL if there
-   *  is no entity to return. This will be the case if the field handler is on
-   *  a non-required relationship and there is no data for the relationship.
-   */
-  function get_entity($result) {
-    // Although views_handler_field_field loads entities in post_execute(), it
-    // doesn't cache them or anything. So we go digging in the View result!
-    // The entity is in the View result under the special '_field_data' array
-    // and under the field alias for the current handler. If this handler is on
-    // the view's base table, this looks the same as the entity ID key.
-    if (isset($result->_field_data[$this->field_alias]['entity'])) {
-      $entity = $result->_field_data[$this->field_alias]['entity'];
-
-      return $entity;
-    }
-  }
-
-  /**
    * Add the form element for this handler's field to the form.
    *
    * We break this out into the handler to allow other handlers that work with
