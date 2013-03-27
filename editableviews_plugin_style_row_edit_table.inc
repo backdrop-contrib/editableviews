@@ -154,6 +154,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // gaps.
     // The entity ID fields have been added to the view result by query().
     $result_entities = array();
+    $edit_field_handlers_grouped = array();
     foreach ($result as $index => $result_row) {
       foreach ($this->helper->relationship_entity_fields as $relationship_id => $relationship_entity_data) {
         $entity_type = $relationship_entity_data['entity_type'];
@@ -186,6 +187,10 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         // Build a lookup array of the same coordinates, but towards the entity:
         // keys are relationship ID then index, values are entity type and entity.
         $result_indexes_reverse[$relationship_id][$index] = array($entity_type, $entity_id);
+
+        // Just create the keys in this so they exist even for relationships
+        // with no editable fields.
+        $edit_field_handlers_grouped[$relationship_id] = array();
       }
     }
     //dsm($result_entities, '$result_entities');
