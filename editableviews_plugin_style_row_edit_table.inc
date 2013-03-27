@@ -175,12 +175,15 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
           $entity = entity_load_single($entity_type, $entity_id);
         }
         else {
-          // If there is no entity, we create one (i.e., make the object without
-          // saving it). We give this a fake entity id, composed of the
-          // relationship handler id and the index so it's unique.
-          $entity_id = $relationship_id . ':' . $index;
+          if (count($edit_field_handlers_grouped[$relationship_id])) {
+            // If there is no entity, and the relationship has editable fields,
+            // we create one (i.e., make the object without saving it). We give
+            // this a fake entity id, composed of the relationship handler id
+            // and the index so it's unique.
+            $entity_id = $relationship_id . ':' . $index;
 
-          $entity = $this->helper->entity_create($relationship_id);
+            $entity = $this->helper->entity_create($relationship_id);
+          }
         }
 
         // Build an array of entities we work with.
