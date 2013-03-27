@@ -76,6 +76,16 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
   }
 
   /**
+   * Add anything to the query that we might need to.
+   */
+  function query() {
+    parent::query();
+
+    // Everything we do to the query is common and thus in the helper.
+    $this->helper->query();
+  }
+
+  /**
    * Helper to get the handlers for editable fields.
    *
    * @return
@@ -301,6 +311,19 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
  */
 class editableviews_style_helper {
 
+  /**
+   * A lookup from relationships to the data needed to load their entities.
+   *
+   * This is an array of the relationships on the view which correspond to
+   * entity base tables, including the base table (as a pseudo-relationship).
+   * The key is the relationship id (in the case of the base table, this is just
+   * the table name itself). Each value is an array containing:
+   *  - 'entity_type': The entity type this relationship brings to the view.
+   *  - 'id_field_alias': The field alias of the field on the view in which to
+   *    find the entity's ID. This field is ensured by our query().
+   */
+  public $relationship_entity_fields = array();
+
   function __construct(&$plugin) {
     $this->plugin = &$plugin;
   }
@@ -395,6 +418,79 @@ class editableviews_style_helper {
       ),
       '#default_value' => $this->plugin->options['save_messages'],
     );
+  }
+
+  /**
+   * Add anything to the query that we might need to.
+   *
+   * For the base and each relationship that brings an entity table, add the
+   * entity ID field for that entity. This ensures that we can load the entities
+   * when we need to get form elements for them.
+   *
+   * We do this for all relationships, not just those which have editable fields
+   * on them, because we may need access to entities that editable field
+   * entities need to point to when creating entities.
+   */
+  function query() {
+    // For each relationship that provides an entity table (including the base
+    // pseudo-relationship), add the field for that entity's ID.
+    $base_table = $this->plugin->view->base_table;
+
+    // Do the View base first.
+    $table_data = views_fetch_data($this->plugin->view->base_table);
+    if (isset($table_data['table']['entity type'])) {
+      // We don't need to ensure this field is on the query: the id field on
+      // the base table always is.
+      $this->relationship_entity_fields[$base_table] = array(
+        'entity_type' => $table_data['table']['entity type'],
+        // We don't need to find an alias for a field on the base.
+        'id_field_alias' => $table_data['table']['base']['field'],
+      );
+    }
+
+    // Now the relationships.
+    $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
+    foreach ($relationship_handlers as $relationship_id => $relationship_handler) {
+      //dsm($relationship_handler, $relationship_id);
+
+      // The 'base' of a relationship is the table it brings.
+      $table = $relationship_handler->definition['base'];
+      // Get the entity type from the table.
+      $table_data = views_fetch_data($table);
+
+      if (!isset($table_data['table']['entity type'])) {
+        // Not an entity base table relationship: skip it.
+        continue;
+      }
+
+      // Get the entity type and the views field that corresponds to the entity
+      // id from the table definition.
+      //dsm($table_data['table'], 'table data');
+      $entity_type = $table_data['table']['entity type'];
+      $entity_id_field = $table_data['table']['base']['field'];
+
+      // Force the 're
+      if ($relationship_handler->options['relationship'] == 'none') {
+        $relationship_relationship = $base_table;
+      }
+      else {
+        $relationship_relationship = $relationship_handler->options['relationship'];
+      }
+      //dsm($relationship_relationship, '$relationship_relationship');
+
+      // We want the alias for the table the relationship brings, not the table
+      // it sits on.
+      $table_alias = $relationship_handler->alias;
+      //dsm("$relationship_id brings $entity_type, $entity_id_field.\ntable alias is $table_alias");
+
+      $entity_id_field_alias = $this->plugin->view->query->add_field($table_alias, $entity_id_field);
+
+      $this->relationship_entity_fields[$relationship_id] = array(
+        'entity_type' => $entity_type,
+        'id_field_alias' => $entity_id_field_alias,
+      );
+    }
+    dsm($this->relationship_entity_fields);
   }
 
   /**
