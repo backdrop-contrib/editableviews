@@ -205,6 +205,14 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     //dsm($result_entities, '$result_entities');
     //dsm($result_indexes_reverse, '$result_indexes_reverse');
 
+    // Make a combined array of coordinate lookups, both forward and reverse.
+    // TODO: eventually replace everything to work with this arrays instead of
+    // the two separate ones.
+    $results_coordinates = array(
+      'entities_to_results' => $result_indexes,
+      'results_to_entities' => $result_indexes_reverse,
+    );
+
     // Build up some lookups pertaining to field handlers, and set the editable
     // fields on new entities.
     $result_entity_ids = array();
@@ -245,7 +253,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     //dsm($result_entities, '$result_entities post connect');
 
     // Load up the form render array.
-    $this->get_form($result_entities, $result_indexes, $edit_field_handlers_grouped);
+    $this->get_form($result_entities, $results_coordinates, $edit_field_handlers_grouped);
 
     // Doctor the view's rendered fields to add in the form elements for
     // the appropriate entity and field.
@@ -272,15 +280,21 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    * @param $entities
    *  An array of entities to get the form for, keyed first by entity type and
    *  then by entity id.
-   * @param $result_indexes
-   *  A lookup from entity type and id to row id and relationship.
-   *  See editableviews_entity_form() for details.
+   * @param $results_coordinates
+   *  An array containing coordinates lookups for getting entity type and entity
+   *  from row id and relationship, and the same the other way round. Contains:
+   *  - 'entities_to_results': A nested array keyed by entity type then entity
+   *    id. The final values are flat arrays of the relationship id and result
+   *    index.
+   *  - 'results_to_entities': A nested array keyed by relationship id then
+   *    result index. The final values are flat arrays of the entity type and
+   *    entity id.
    * @param $edit_field_handlers
    *  An array of field handlers to provide form elements for, grouped by
    *  their relationship.
    *  See editableviews_entity_form() for details.
    */
-  function get_form($entities, $result_indexes, $edit_field_handlers) {
+  function get_form($entities, $results_coordinates, $edit_field_handlers) {
     // Create a dynamic form ID using the base name (for quick recognition
     // in hook_forms()) and the view name. This allows hook_form_alter() to
     // target forms for specific views. We don't add the display name as there's
@@ -289,7 +303,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $form_id = 'editableviews_entity_form' . '_' . $this->view->name;
 
     // We store this rather than return it, as it's used in different places.
-    $this->form = drupal_get_form($form_id, $entities, $result_indexes, $edit_field_handlers, $this->view);
+    $this->form = drupal_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
   }
 
   /**

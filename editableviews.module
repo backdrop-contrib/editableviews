@@ -52,13 +52,18 @@ function editableviews_forms($form_id, $args) {
  *  to leave a blank part of the result empty. However, it does not account for
  *  the fact that there may be default values in the field widgets!
  *  TODO: consider this problem!
- * @param $result_indexes
- *  An array giving the relationship and row index of the entities in the view.
- *  This is keyed first by entity type, then by entity id. The values are
- *  themselves a flat array of ($relationship, $index). Conceptually, this can
- *  be visualized as the coordinates that specify which cells in the table the
- *  entity occupies: the index gives the row and the relationship one or more
- *  columns.
+ * @param $results_coordinates
+ *  An array containing coordinates lookups for getting entity type and entity
+ *  from row id and relationship, and the same the other way round. Contains:
+ *  - 'entities_to_results': A nested array keyed by entity type then entity
+ *    id. The final values are flat arrays of the relationship id and result
+ *    index.
+ *  - 'results_to_entities': A nested array keyed by relationship id then
+ *    result index. The final values are flat arrays of the entity type and
+ *    entity id.
+ *  Conceptually, the pair (relationship id, result index) can be visualized as
+ *  the coordinates that specify which cells in the table the entity occupies:
+ *  the index gives the row and the relationship id one or more columns.
  * @param $field_handlers
  *  An array of the editable Views field handlers to show the form elements for.
  *  This should be grouped by relationship ID, with the base table for the
@@ -66,7 +71,7 @@ function editableviews_forms($form_id, $args) {
  * @param $view
  *  The view object.
  */
-function editableviews_entity_form($form, &$form_state, $entities, $result_indexes, $field_handlers, $view) {
+function editableviews_entity_form($form, &$form_state, $entities, $results_coordinates, $field_handlers, $view) {
   // Include this here as it's fairly likely we have handlers that need it;
   // rather than let the handler class include it over and over again.
   ctools_include('fields');
@@ -107,7 +112,7 @@ function editableviews_entity_form($form, &$form_state, $entities, $result_index
 
       // Get the relationship that this entity is on. We only want to get form
       // elements from the field handlers that are on this relationship.
-      list($relationship, $index) = $result_indexes[$entity_type][$entity_id];
+      list($relationship, $index) = $results_coordinates['entities_to_results'][$entity_type][$entity_id];
 
       // Build up the per-entity subform.
       $form[$entity_type][$entity_id] = array(
