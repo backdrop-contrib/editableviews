@@ -249,7 +249,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     //    needs to point back to the existing entity on the relationship's base.
     // Here we figure out the id we need to point to, and the property to point
     // to it in.
-    $this->helper->connect_new_entities($result_entities, $result_indexes, $result_indexes_reverse);
+    $this->helper->connect_new_entities($result_entities, $results_coordinates);
     //dsm($result_entities, '$result_entities post connect');
 
     // Load up the form render array.
@@ -586,12 +586,12 @@ class editableviews_style_helper {
    * @param $result_entities
    *  The array of result entities from the style plugin. Passed by reference
    *  so the entities can be altered. (TODO: is this actually needed??)
-   * @param $result_indexes
-   *  The forward index of entity ids.
-   * @param $result_indexes_reverse
-   *  The reverse index of entity ids.
+   * @param $results_coordinates
+   *  The combined coordinates array, containing both the forward and reverse
+   *  lookups for entities and results.
+   *  @see editableviews_plugin_style_row_edit_table::get_form() for details.
    */
-  function connect_new_entities(&$result_entities, $result_indexes, $result_indexes_reverse) {
+  function connect_new_entities(&$result_entities, $results_coordinates) {
     $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
 
     foreach (array_keys($result_entities) as $entity_type) {
@@ -599,7 +599,7 @@ class editableviews_style_helper {
         // New entities have a non-numeric fake id we just gave them.
         if (!is_numeric($entity_id)) {
           // Get the views coordinates for this entity.
-          list($relationship_id, $index) = $result_indexes[$entity_type][$entity_id];
+          list($relationship_id, $index) = $results_coordinates['entities_to_results'][$entity_type][$entity_id];
           $relationship_handler = $relationship_handlers[$relationship_id];
           //dsm($relationship_handler);
 
@@ -617,7 +617,7 @@ class editableviews_style_helper {
             // as for reverse.
             // Get the entity out of the imaginary Views grid that is on the same
             // row as us, and in the $relationship_relationship relationship...
-            list($referring_entity_type, $referring_entity_id) = $result_indexes_reverse[$relationship_relationship][$index];
+            list($referring_entity_type, $referring_entity_id) = $results_coordinates['results_to_entities'][$relationship_relationship][$index];
             $referring_entity = $result_entities[$referring_entity_type][$referring_entity_id];
 
             // Store this entity's details on the current, new entity, so that
@@ -636,7 +636,7 @@ class editableviews_style_helper {
 
             // Get the entity out of the imaginary Views grid that is on the same
             // row as us, and in the $relationship_relationship relationship...
-            list($referred_entity_type, $referred_entity_id) = $result_indexes_reverse[$relationship_relationship][$index];
+            list($referred_entity_type, $referred_entity_id) = $results_coordinates['results_to_entities'][$relationship_relationship][$index];
             $referred_entity = $result_entities[$referred_entity_type][$referred_entity_id];
 
             // From here on, this is just reverse relationships!
