@@ -279,9 +279,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    *  An array of field handlers to provide form elements for, grouped by
    *  their relationship.
    *  See editableviews_entity_form() for details.
-   *
-   * @return
-   *  The form render array from drupal_get_form().
    */
   function get_form($entities, $result_indexes, $edit_field_handlers) {
     // Create a dynamic form ID using the base name (for quick recognition
