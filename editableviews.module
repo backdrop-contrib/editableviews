@@ -86,6 +86,9 @@ function editableviews_entity_form($form, &$form_state, $entities, $results_coor
   //$form['#field_names'] = $fields;
   $form['#field_handlers'] = $field_handlers;
 
+  // Put these in the form in case custom form handlers need to look at them.
+  $form['#results_coordinates'] = $results_coordinates;
+
   // Put the view name and display name on the form, for hook_form_alter().
   $form['#view_name'] = $view->name;
   $form['#view_display_name'] = $view->current_display;
