@@ -2,12 +2,9 @@
 /**
  * @file editableviews.module
  * Contain module code.
- todo:
- - some way to mark cells for a NEW entity? at least put a class on them!
- - ditto, put class on relationship cells.
- - RENAME to views_editable / editableviews / viewsedit ?
- - rename our fields, they're all the damn same!
- - validation
+ * @todo:
+ *  - some way to mark cells for a NEW entity? at least put a class on them!
+ *  - ditto, put class on relationship cells.
  */
 
 /**
