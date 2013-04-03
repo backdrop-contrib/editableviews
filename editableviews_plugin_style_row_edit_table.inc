@@ -157,6 +157,10 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
       // This is for the form builder to only work on the handlers that are
       // relevant to the entity's relationship.
       $field_handler_relationship_id = $handler->options['relationship'];
+      if ($field_handler_relationship_id == 'none') {
+        $field_handler_relationship_id = $this->view->base_table;
+      }
+
       $edit_field_handlers_grouped[$field_handler_relationship_id][$handler_id] = $handler;
     }
 
@@ -221,6 +225,9 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         // Get the entity type and entity for this field handler from the
         // relationship lookup.
         $field_handler_relationship_id = $handler->options['relationship'];
+        if ($field_handler_relationship_id == 'none') {
+          $field_handler_relationship_id = $this->view->base_table;
+        }
 
         // Add the field_name for this field handler to the list on the entity
         // which keeps track of them.
