@@ -175,8 +175,11 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         // Get the entity ID out of the result.
         $entity_id = $result_row->{$relationship_entity_data['id_field_alias']};
 
+        // Get the entities we work with, and build an array of them.
         if (isset($entity_id)) {
           $entity = entity_load_single($entity_type, $entity_id);
+
+          $result_entities[$entity_type][$entity_id] = $entity;
         }
         else {
           if (count($edit_field_handlers_grouped[$relationship_id])) {
@@ -187,11 +190,10 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
             $entity_id = $relationship_id . ':' . $index;
 
             $entity = $this->helper->entity_create($relationship_id);
+
+            $result_entities[$entity_type][$entity_id] = $entity;
           }
         }
-
-        // Build an array of entities we work with.
-        $result_entities[$entity_type][$entity_id] = $entity;
 
         // Build a lookup from entity type and entity to the result row index
         // and relationship. It helps to conceptualize this as giving us
