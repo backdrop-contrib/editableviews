@@ -15,6 +15,7 @@ function editableviews_views_plugins() {
       'help' => t('Displays a table whose fields can be edited.'),
       'handler' => 'editableviews_plugin_style_row_edit_table',
       'theme' => 'views_view_table',
+      'theme path' => drupal_get_path('module', 'views') . '/theme',
       'uses row class' => TRUE,
       'uses fields' => TRUE,
       'uses options' => TRUE,
