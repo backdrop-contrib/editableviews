@@ -258,7 +258,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     //    needs to point back to the existing entity on the relationship's base.
     // Here we figure out the id we need to point to, and the property to point
     // to it in.
-    $this->helper->connect_new_entities($result_entities, $results_coordinates);
+    $this->helper->connect_new_entities($result_entities, $results_coordinates, $edit_field_handlers_grouped);
     //dsm($result_entities, '$result_entities post connect');
 
     // Load up the form render array.
@@ -599,9 +599,14 @@ class editableviews_style_helper {
    *  The combined coordinates array, containing both the forward and reverse
    *  lookups for entities and results.
    *  @see editableviews_plugin_style_row_edit_table::get_form() for details.
+   * @param $edit_field_handlers_grouped
+   *  The edit field handlers, grouped by relationship handler ID.
    */
-  function connect_new_entities(&$result_entities, $results_coordinates) {
+  function connect_new_entities(&$result_entities, $results_coordinates, $edit_field_handlers_grouped) {
     $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
+
+    //dsm($edit_field_handlers_grouped);
+    //dsm($result_entities);
 
     foreach (array_keys($result_entities) as $entity_type) {
       foreach ($result_entities[$entity_type] as $entity_id => $entity) {
@@ -609,6 +614,7 @@ class editableviews_style_helper {
         if (!is_numeric($entity_id)) {
           // Get the views coordinates for this entity.
           list($relationship_id, $index) = $results_coordinates['entities_to_results'][$entity_type][$entity_id];
+
           $relationship_handler = $relationship_handlers[$relationship_id];
           //dsm($relationship_handler);
 
@@ -621,8 +627,15 @@ class editableviews_style_helper {
             $relationship_relationship = $this->plugin->view->base_table;
           }
 
+          // Only act if the new entity's relationship has editable fields:
+          // otherwise it's just an empty bunch of table cells, and there's
+          // nothing to connect to or from.
+          if (count($edit_field_handlers_grouped[$relationship_relationship]) == 0) {
+            continue;
+          }
+
           if ($relationship_handler->definition['editableviews_direction'] == 'forward') {
-            // Get the entity on our relationship\s reletaionship -- same
+            // Get the entity on our relationship's relationship -- same
             // as for reverse.
             // Get the entity out of the imaginary Views grid that is on the same
             // row as us, and in the $relationship_relationship relationship...
