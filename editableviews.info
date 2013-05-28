@@ -9,3 +9,5 @@ core = 7.x
 files[] = editableviews_plugin_style_row_edit_table.inc
 files[] = handlers/editableviews_handler_field_field_edit.inc
 files[] = handlers/editableviews_handler_field_node_title_edit.inc
+
+files[] = tests/editableviews.test
