@@ -18,6 +18,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     $options = parent::option_definition();
 
     $options['property'] = array('default' => NULL);
+    $options['reverse_boolean'] = array('default' => FALSE);
 
     return $options;
   }
@@ -85,7 +86,28 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
       '#options' => $options,
       '#description' => t('Select the property to edit with this field. (Only properties that define how they may be set on an entity are available. Be sure to ensure the property applies to all entities the View will show.)'),
       '#default_value' => $this->options['property'],
+      // Views AJAX magic which I don't pretend to understand, which allows a
+      // dependent form element for 'reverse_boolean'.
+      '#ajax' => array(
+        'path' => views_ui_build_form_url($form_state),
+      ),
+      '#submit' => array('views_ui_config_item_form_submit_temporary'),
+      '#executes_submit_callback' => TRUE,
     );
+
+    if ($this->options['property']) {
+      $entity_all_property_info = entity_get_all_property_info($table_data['table']['entity type']);
+      $selected_property_info = $entity_all_property_info[$this->options['property']];
+
+      if ($selected_property_info['type'] == 'boolean') {
+        $form['reverse_boolean'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Reverse checkbox value'),
+          '#description' => t('Reverse the value of the boolean property in the checkbox. Use this for properties which make more sense to the user when inverted.'),
+          '#default_value' => $this->options['reverse_boolean'],
+        );
+      }
+    }
   }
 
   /**
@@ -211,13 +233,18 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    *  The wrapper for the entity whose property is to be shown in the element.
    */
   function edit_form_element_checkbox(&$element, &$form_state, $wrapper) {
+    $default_value = $wrapper->{$this->options['property']}->raw();
+    if ($this->options['reverse_boolean']) {
+      $default_value = !$default_value;
+    }
+
     $element[$this->options['property']] = array(
       '#type' => 'checkbox',
       '#title' => check_plain($this->property_info['label']),
       '#required' => !empty($this->property_info['required']),
       // The value might not be set in the case where we're on a non-required
       // relationship with empty data. TODO???
-      '#default_value' => $wrapper->{$this->options['property']}->raw(),
+      '#default_value' => $default_value,
     );
   }
 
@@ -243,6 +270,9 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     try {
       // Get the value out of the form state.
       $value = $this->get_element_value($element, $form_state);
+      if ($this->options['reverse_boolean']) {
+        $value = !$value;
+      }
 
       // Set it on the wrapper, and stand back!
       $wrapper = entity_metadata_wrapper($entity_type, $entity);
@@ -260,6 +290,10 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
   function edit_form_submit($entity_type, $entity, &$element, &$form_state) {
     // Get the value out of the form state.
     $value = $this->get_element_value($element, $form_state);
+    if ($this->options['reverse_boolean']) {
+      $value = !$value;
+    }
+
     // We can set this on the wrapper with inpunity, as the validate step
     // already caught any exception this might throw.
     $wrapper = entity_metadata_wrapper($entity_type, $entity);
