@@ -184,10 +184,10 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
 
     // Set the title property.
     if ($this->options['form_use_label']) {
-      $element['#title'] = $this->options['label'];
+      $element[$this->options['property']]['#title'] = $this->options['label'];
     }
     else {
-      $element['#title'] = check_plain($this->property_info['label']);
+      $element[$this->options['property']]['#title'] = check_plain($this->property_info['label']);
     }
   }
 
