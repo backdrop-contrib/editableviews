@@ -11,3 +11,6 @@ files[] = handlers/editableviews_handler_field_field_edit.inc
 files[] = handlers/editableviews_handler_field_node_title_edit.inc
 
 files[] = tests/editableviews.test
+
+test_dependencies[] = entityreference
+test_dependencies[] = features
