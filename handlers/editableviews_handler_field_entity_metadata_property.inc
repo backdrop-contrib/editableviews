@@ -18,6 +18,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     $options = parent::option_definition();
 
     $options['property'] = array('default' => NULL);
+    $options['form_use_label'] = array('default' => FALSE);
     $options['reverse_boolean'] = array('default' => FALSE);
 
     return $options;
@@ -95,6 +96,13 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
       '#executes_submit_callback' => TRUE,
     );
 
+    $form['form_use_label'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Use handler label for form element'),
+      '#description' => t('Use the label for this handler on the form element, rather than the label set in metadata properties which is not always suited to non-developer consumption.'),
+      '#default_value' => $this->options['form_use_label'],
+    );
+
     if ($this->options['property']) {
       $entity_all_property_info = entity_get_all_property_info($table_data['table']['entity type']);
       $selected_property_info = $entity_all_property_info[$this->options['property']];
@@ -155,23 +163,31 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
       $this->property_info = $wrapper->getPropertyInfo($this->options['property']);
     }
 
-    // Special case: if the property has an 'options list' defined, we can show
-    // a select form element of options.
     if (isset($this->property_info['options list'])) {
+      // Special case: if the property has an 'options list' defined, we can
+      // show a select form element of options.
       $this->edit_form_element_select($element, $form_state, $wrapper);
-      return;
+    }
+    else {
+      // The type of form element we add depends on the type of the property.
+      // This is just a best guess.
+      // TODO: add an option to override this?
+      switch ($this->property_info['type']) {
+        case 'boolean':
+          $this->edit_form_element_checkbox($element, $form_state, $wrapper);
+          break;
+        default:
+          $this->edit_form_element_textfield($element, $form_state, $wrapper);
+          break;
+      }
     }
 
-    // The type of form element we add depends on the type of the property.
-    // This is just a best guess.
-    // TODO: add an option to override this?
-    switch ($this->property_info['type']) {
-      case 'boolean':
-        $this->edit_form_element_checkbox($element, $form_state, $wrapper);
-        return;
-      default:
-        $this->edit_form_element_textfield($element, $form_state, $wrapper);
-        return;
+    // Set the title property.
+    if ($this->options['form_use_label']) {
+      $element['#title'] = $this->options['label'];
+    }
+    else {
+      $element['#title'] = check_plain($this->property_info['label']);
     }
   }
 
@@ -189,7 +205,6 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     // Just do the same thing as node_content_form().
     $element[$this->options['property']] = array(
       '#type' => 'textfield',
-      '#title' => check_plain($this->property_info['label']),
       '#required' => !empty($this->property_info['required']),
       // The value might not be set in the case where we're on a non-required
       // relationship with empty data. TODO???
@@ -213,7 +228,6 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     // Just do the same thing as node_content_form().
     $element[$this->options['property']] = array(
       '#type' => 'select',
-      '#title' => check_plain($this->property_info['label']),
       '#required' => !empty($this->property_info['required']),
       '#options' => $wrapper->{$this->options['property']}->optionsList(),
       // The value might not be set in the case where we're on a non-required
@@ -240,7 +254,6 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
 
     $element[$this->options['property']] = array(
       '#type' => 'checkbox',
-      '#title' => check_plain($this->property_info['label']),
       '#required' => !empty($this->property_info['required']),
       // The value might not be set in the case where we're on a non-required
       // relationship with empty data. TODO???
