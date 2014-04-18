@@ -23,6 +23,7 @@ features[field_instance][] = node-editable_views_test_referencing-field_test_nod
 features[node][] = editable_views_test_node
 features[node][] = editable_views_test_referencing
 features[views_view][] = test_editable_views_node_fields
+features[views_view][] = test_editable_views_node_properties
 features[views_view][] = test_editable_views_node_referenced_backwards_title
 features[views_view][] = test_editable_views_node_referenced_forwards_title
 features[views_view][] = test_editable_views_node_title
