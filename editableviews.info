@@ -10,6 +10,7 @@ files[] = editableviews_plugin_style_row_edit_table.inc
 files[] = handlers/editableviews_handler_field_field_edit.inc
 files[] = handlers/editableviews_handler_field_node_title_edit.inc
 files[] = handlers/editableviews_handler_field_entity_metadata_property.inc
+files[] = handlers/editableviews_handler_field_save_button_jump_link.inc
 
 files[] = tests/editableviews.test
 
