@@ -198,13 +198,18 @@ function editableviews_entity_form_validate($form, &$form_state) {
         // Pass FieldAPI validation errors back to widgets for accurate error
         // flagging.
         foreach ($field_handlers[$relationship] as $field_handler) {
-          // This is ugly, but only FieldAPI field handlers need this. The
-          // alternative would be for the editableviews_handler_field_field_edit
-          // handler's edit_form_validate() method to detect whether it's the
-          // last FieldAPI field handler for the current entity, which would be
-          // messier.
-          if (method_exists($field_handler, 'edit_form_validate_errors')) {
-            $field_handler->edit_form_validate_errors($entity_type, $entity, $form[$entity_type][$entity_id], $form_state, $errors);
+          $real_field_name = $field_handler->definition['field_name'];
+          if (isset($errors[$real_field_name])) {
+            $field_errors = array($real_field_name => $errors[$real_field_name]);
+
+            // This is ugly, but only FieldAPI field handlers need this. The
+            // alternative would be for the editableviews_handler_field_field_edit
+            // handler's edit_form_validate() method to detect whether it's the
+            // last FieldAPI field handler for the current entity, which would be
+            // messier.
+            if (method_exists($field_handler, 'edit_form_validate_errors')) {
+              $field_handler->edit_form_validate_errors($entity_type, $entity, $form[$entity_type][$entity_id], $form_state, $field_errors);
+            }
           }
         }
       }
