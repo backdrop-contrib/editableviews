@@ -15,7 +15,7 @@ function editableviews_views_plugins() {
       'help' => t('Displays a table whose fields can be edited.'),
       'handler' => 'editableviews_plugin_style_row_edit_table',
       'theme' => 'views_view_table',
-      'theme path' => drupal_get_path('module', 'views') . '/theme',
+      'theme path' => backdrop_get_path('module', 'views') . '/theme',
       'uses row class' => TRUE,
       'uses fields' => TRUE,
       'uses options' => TRUE,
@@ -63,11 +63,11 @@ function editableviews_views_data_alter(&$data) {
     // array because that will have other, unwanted, handler types on it.
     $new_field_name = $column . '_editable';
     $data[$table][$new_field_name] = array(
-      'group'       => $data[$table][$column]['group'],
-      'title'       => $data[$table][$column]['title'] . ' ' . t('(editable)'),
+      'group' => $data[$table][$column]['group'],
+      'title' => $data[$table][$column]['title'] . ' ' . t('(editable)'),
       'title short' => $data[$table][$column]['title short'],
       // TODO: add detail here.
-      'help'        => $data[$table][$column]['help'],
+      'help' => $data[$table][$column]['help'],
     );
 
     $data[$table][$new_field_name]['field'] = $data[$table][$column]['field'];
@@ -95,7 +95,7 @@ function editableviews_views_data_alter(&$data) {
   // Node title editable field.
   $data['node']['title_editable'] = array(
     'title' => $data['node']['title']['title'] . ' ' . t('(editable)'),
-    'help'  => $data['node']['title']['help'],
+    'help' => $data['node']['title']['help'],
   );
   $data['node']['title_editable']['field'] = $data['node']['title']['field'];
   $data['node']['title_editable']['field']['handler'] = 'editableviews_handler_field_node_title_edit';
@@ -104,7 +104,7 @@ function editableviews_views_data_alter(&$data) {
   // This is set by entityreference module in the magic callback on the field,
   // hook_field_views_data_views_data_alter(). This is invoked by Field module's
   // hook_views_data_alter(). Unfortunately, unlike Field module's
-  // hook_views_data() there is no drupal_alter() of the resulting data.
+  // hook_views_data() there is no backdrop_alter() of the resulting data.
   // Therefore our only way to alter it is here. Extremely fortunately, it
   // appears to already be here in the data at this point and module weight
   // does not seem to be an issue!
@@ -134,7 +134,7 @@ function editableviews_views_data_alter(&$data) {
 }
 
 /**
- * Implement hook_field_views_data_alter.
+ * Implements hook_field_views_data_alter().
  *
  * Define the direction of entityreference forward relationships.
  *

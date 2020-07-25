@@ -269,7 +269,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     $parents = $element['#parents'];
     $parents[] = $this->options['property'];
 
-    $value = drupal_array_get_nested_value($form_state['values'], $parents);
+    $value = backdrop_array_get_nested_value($form_state['values'], $parents);
 
     return $value;
   }

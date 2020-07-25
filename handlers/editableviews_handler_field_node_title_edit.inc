@@ -79,7 +79,7 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
     $parents[] = 'title';
 
     // Get the value out of the form state.
-    $value = drupal_array_get_nested_value($form_state['values'], $parents);
+    $value = backdrop_array_get_nested_value($form_state['values'], $parents);
 
     // Set it on the node.
     $entity->title = $value;

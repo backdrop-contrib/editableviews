@@ -1,0 +1,18 @@
+[EditableViewsBaseWebTestCase]
+name = EditableViewsBaseWebTestCase
+description = EditableViewsBaseWebTestCase
+group = editableviews
+file = tests/editableviews.test
+
+[EditableViewsBasicWebTestCase]
+name = Test simple editable views
+description = Test basic views without relationships.
+group = Editable Views
+file = tests/editableviews.test
+
+[EditableViewsEntityReferenceWebTestCase]
+name = Test editable views with relationships
+description = Test editable views with editable fields on relationships.
+group = Editable Views
+file = tests/editableviews.test
+

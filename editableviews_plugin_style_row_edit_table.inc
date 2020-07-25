@@ -24,7 +24,10 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // pattern is anything to go by!
     $options['relationship_creation_bundle'] = array('default' => array());
     $options['save_messages'] = array('default' => 'individual');
-    $options['batch'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['batch'] = array(
+      'default' => FALSE,
+      'bool' => TRUE,
+    );
     $options['batch_size'] = array('default' => 10);
 
     return $options;
@@ -62,14 +65,14 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
 
       if (!isset($relationship_handler->definition['editableviews_direction'])) {
         $errors[] = t("The relationship '@relationship' is not compatible with editable fields that may cause creation of entities for empty data. The relationship should be set to be 'required'.", array(
-          '@relationship' => $relationship_handler->options['label']
+          '@relationship' => $relationship_handler->options['label'],
         ));
       }
 
       if (!isset($this->options['relationship_creation_bundle'][$relationship_id])) {
         $errors[] = t("Display @display is set to use a editable fields and the '@relationship' relationship is not set to be required: the bundle of entities to create on this relationship must be set in the Editable Table options.", array(
           '@display' => $this->display->display_title,
-          '@relationship' => $relationship_handler->options['label']
+          '@relationship' => $relationship_handler->options['label'],
         ));
       }
     }
@@ -257,11 +260,11 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // Now we have built up all our entities, go over them again and add
     // the connecting properties to any new ones.
     // In other words:
-    //  - On a forward relationship, the existing entity on the relationship's
-    //    base needs to point to the new entity that is (potentially) about to
-    //    be saved.
-    //  - On a reverse relationship, the new entity that is about to be created
-    //    needs to point back to the existing entity on the relationship's base.
+//  - On a forward relationship, the existing entity on the relationship's
+//    base needs to point to the new entity that is (potentially) about to
+//    be saved.
+//  - On a reverse relationship, the new entity that is about to be created
+//    needs to point back to the existing entity on the relationship's base.
     // Here we figure out the id we need to point to, and the property to point
     // to it in.
     $this->helper->connect_new_entities($result_entities, $results_coordinates, $edit_field_handlers_grouped);
@@ -284,7 +287,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
 
         // TODO! theme this!!
         $this->rendered_fields[$index][$handler_id] = '<div class="views-row-edit-static">' . $rendered_field . '</div>';
-        $this->rendered_fields[$index][$handler_id] .= '<div class="views-row-edit-edit">' . drupal_render($this->form[$entity_type][$entity_id][$field_name]) . '</div>';
+        $this->rendered_fields[$index][$handler_id] .= '<div class="views-row-edit-edit">' . backdrop_render($this->form[$entity_type][$entity_id][$field_name]) . '</div>';
       }
     }
   }
@@ -318,7 +321,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $form_id = 'editableviews_entity_form' . '_' . $this->view->name;
 
     // We store this rather than return it, as it's used in different places.
-    $this->form = drupal_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
+    $this->form = backdrop_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
   }
 
   /**
@@ -467,7 +470,7 @@ class editableviews_style_helper {
       '#title' => t("Batch size"),
       '#description' => t('Number of entities to process in each batch step.'),
       '#default_value' => $this->plugin->options['batch_size'],
-      '#states'=> array(
+      '#states' => array(
         'visible' => array(
           ':input[name="style_options[batch]"]' => array('checked' => TRUE),
         ),

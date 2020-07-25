@@ -1,6 +1,7 @@
 name = Editable Views Test Feature
 description = Components required for tests for Editable Views.
-core = 7.x
+backdrop = 1.x
+type = module
 package = Features
 hidden = TRUE
 dependencies[] = ctools

@@ -245,7 +245,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
     // the values in $form_state.
     ctools_field_invoke_field_default($field_instance, 'extract_form_values', $entity_type, $entity, $element, $form_state);
 
-    ctools_field_invoke_field_default($field_instance, 'submit',              $entity_type, $entity, $element, $form_state);
+    ctools_field_invoke_field_default($field_instance, 'submit',               $entity_type, $entity, $element, $form_state);
   }
 
 }

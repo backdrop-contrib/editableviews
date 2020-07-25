@@ -5,14 +5,7 @@ dependencies[] = views
 dependencies[] = entity
 dependencies[] = ctools
 dependencies[] = field_ui
-core = 7.x
-files[] = editableviews_plugin_style_row_edit_table.inc
-files[] = handlers/editableviews_handler_field_field_edit.inc
-files[] = handlers/editableviews_handler_field_node_title_edit.inc
-files[] = handlers/editableviews_handler_field_entity_metadata_property.inc
-files[] = handlers/editableviews_handler_field_save_button_jump_link.inc
-
-files[] = tests/editableviews.test
-
+backdrop = 1.x
+type = module
 test_dependencies[] = entityreference
 test_dependencies[] = features
