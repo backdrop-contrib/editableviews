@@ -22,6 +22,19 @@ function editableviews_views_plugins() {
       'type' => 'normal',
       'help topic' => 'style-table',
     ),
+    'editableviews_unformatted' => array(
+      'title' => t('Editable Unformatted'),
+      'help' => t('Displays a unformatted view whose fields can be edited.'),
+      'handler' => 'editableviews_plugin_style_edit_unformatted',
+      'theme path' => drupal_get_path('module', 'views') . '/theme',
+      'theme' => 'views_view_unformatted',
+      'uses row plugin' => TRUE,
+      'uses row class' => TRUE,
+      'uses grouping' => TRUE,
+      'uses options' => TRUE,
+      'type' => 'normal',
+      'help topic' => 'style-unformatted',
+    ),
   );
 
   return $plugins;
