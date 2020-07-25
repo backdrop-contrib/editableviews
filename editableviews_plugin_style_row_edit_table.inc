@@ -186,7 +186,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
 
         // Get the entities we work with, and build an array of them.
         if (isset($entity_id)) {
-          $entity = entity_load_single($entity_type, $entity_id);
+          $entity = entity_load($entity_type, $entity_id);
 
           $result_entities[$entity_type][$entity_id] = $entity;
         }

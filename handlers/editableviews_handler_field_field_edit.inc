@@ -98,7 +98,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
 
     // Because a View result can show entities of different bundles, it is
     // essential that we check the field actually exists on the current entity.
-    // ctools_field_invoke_field() does actually check for this too, but that
+    // editableviews_field_invoke_field() does actually check for this too, but that
     // only works when it's passed a field name rather than a whole instance.
     if (empty($field_instance)) {
       return;
@@ -148,7 +148,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
       'default' => TRUE,
     );
 
-    $element += (array) ctools_field_invoke_field($field_instance, 'form', $entity_type, $entity, $element, $form_state, $field_invoke_options);
+    $element += (array) editableviews_field_invoke_field($field_instance, 'form', $entity_type, $entity, $element, $form_state, $field_invoke_options);
   }
 
   /**
@@ -173,7 +173,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
 
     // Because a View result can show entities of different bundles, it is
     // essential that we check the field actually exists on the current entity.
-    // ctools_field_invoke_field() does actually check for this too, but that
+    // editableviews_field_invoke_field() does actually check for this too, but that
     // only works when it's passed a field name rather than a whole instance.
     if (empty($field_instance)) {
       return;
@@ -183,12 +183,12 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
     // We pass a partial $form array to the Field API hook. This contains at
     // its base the #parents array, which tells Field API where to look for
     // the values in $form_state.
-    ctools_field_invoke_field_default($field_instance, 'extract_form_values', $entity_type, $entity, $element, $form_state);
+    editableviews_field_invoke_field_default($field_instance, 'extract_form_values', $entity_type, $entity, $element, $form_state);
 
     // Check generic, field-type-agnostic errors first.
-    ctools_field_invoke_field_default($field_instance, 'validate', $entity_type, $entity, $errors);
+    editableviews_field_invoke_field_default($field_instance, 'validate', $entity_type, $entity, $errors);
     // Check field-type specific errors.
-    ctools_field_invoke_field($field_instance, 'validate', $entity_type, $entity, $errors);
+    editableviews_field_invoke_field($field_instance, 'validate', $entity_type, $entity, $errors);
   }
 
   /**
@@ -220,7 +220,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
         field_form_set_state($element['#parents'], $field_name, $langcode, $form_state, $field_state);
       }
     }
-    ctools_field_invoke_field_default($field_instance, 'form_errors', $entity_type, $entity, $element, $form_state);
+    editableviews_field_invoke_field_default($field_instance, 'form_errors', $entity_type, $entity, $element, $form_state);
   }
 
   /**
@@ -233,7 +233,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
 
     // Because a View result can show entities of different bundles, it is
     // essential that we check the field actually exists on the current entity.
-    // ctools_field_invoke_field() does actually check for this too, but that
+    // editableviews_field_invoke_field() does actually check for this too, but that
     // only works when it's passed a field name rather than a whole instance.
     if (empty($field_instance)) {
       return;
@@ -243,9 +243,9 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
     // We pass the partial $form array to the Field API hook. This contains at
     // its base the #parents array, which tells Field API where to look for
     // the values in $form_state.
-    ctools_field_invoke_field_default($field_instance, 'extract_form_values', $entity_type, $entity, $element, $form_state);
+    editableviews_field_invoke_field_default($field_instance, 'extract_form_values', $entity_type, $entity, $element, $form_state);
 
-    ctools_field_invoke_field_default($field_instance, 'submit',               $entity_type, $entity, $element, $form_state);
+    editableviews_field_invoke_field_default($field_instance, 'submit',               $entity_type, $entity, $element, $form_state);
   }
 
 }

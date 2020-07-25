@@ -12,7 +12,7 @@
  */
 function editableviews_views_api() {
   return array(
-    'api' => '3.0-alpha1',
+    'api' => '3.0',
     'path' => backdrop_get_path('module', 'editableviews'),
   );
 }
@@ -74,7 +74,7 @@ function editableviews_forms($form_id, $args) {
 function editableviews_entity_form($form, &$form_state, $entities, $results_coordinates, $field_handlers, $view) {
   // Include this here as it's fairly likely we have handlers that need it;
   // rather than let the handler class include it over and over again.
-  ctools_include('fields');
+  include_once(backdrop_get_path('module', 'editablefields') . 'editableviews.fields.inc');
 
   //dsm(func_get_args(), 'form builder params');
   //dsm($entities);
@@ -166,7 +166,7 @@ function editableviews_entity_form($form, &$form_state, $entities, $results_coor
  * Adapted from fape_field_edit_field_form_validate().
  */
 function editableviews_entity_form_validate($form, &$form_state) {
-  ctools_include('fields');
+  include_once(backdrop_get_path('module', 'editablefields') . 'editableviews.fields.inc');
 
   $field_handlers = $form['#field_handlers'];
 
@@ -235,7 +235,7 @@ function editableviews_entity_form_validate($form, &$form_state) {
  * TODO: consider implementing this.
  */
 function editableviews_entity_form_submit_build_values($form, &$form_state) {
-  ctools_include('fields');
+  include_once(backdrop_get_path('module', 'editablefields') . 'editableviews.fields.inc');
 
   //dsm($form);
   //dsm($form_state, 'fs');
@@ -361,8 +361,8 @@ function editableviews_entity_save($entities, $save_messages) {
         continue;
       }
 
-      // Save the entity using Entity API.
-      entity_save($entity_type, $entity);
+      // Save the entity using Entity Plus.
+      entity_plus_save($entity_type, $entity);
 
       // If the entity was a new one, and on a forward relationship, we need
       // to set the referring entity to point to it. We can do this now that the
@@ -380,7 +380,7 @@ function editableviews_entity_save($entities, $save_messages) {
         // This needs to be saved a second time, as there's no simple way we can
         // guarantee the order we come to these in: they are in the order we
         // encounter them going through the field handlers.
-        entity_save($entity->editableviews_future_reference['entity_type'], $referring_entity);
+        entity_plus_save($entity->editableviews_future_reference['entity_type'], $referring_entity);
       }
 
       if ($save_messages == 'individual') {
