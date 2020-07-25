@@ -24,6 +24,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
     $options['widget_type'] = array('default' => NULL);
     $options['suppress_label'] = array('default' => FALSE);
     $options['suppress_description'] = array('default' => FALSE);
+    $options['suppress_value'] = array('default' => FALSE);
 
     return $options;
   }
@@ -61,6 +62,13 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
       '#title' => t('Hide field widget description'),
       '#description' => t('If selected, the description on field widgets is hidden.'),
       '#default_value' => $this->options['suppress_description'],
+    );
+
+    $form['suppress_value'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide field value'),
+      '#description' => t('If selected, only the field input widget will be shown.'),
+      '#default_value' => $this->options['suppress_value'],
     );
   }
 

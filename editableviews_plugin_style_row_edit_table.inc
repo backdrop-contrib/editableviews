@@ -260,11 +260,11 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // Now we have built up all our entities, go over them again and add
     // the connecting properties to any new ones.
     // In other words:
-//  - On a forward relationship, the existing entity on the relationship's
-//    base needs to point to the new entity that is (potentially) about to
-//    be saved.
-//  - On a reverse relationship, the new entity that is about to be created
-//    needs to point back to the existing entity on the relationship's base.
+    //  - On a forward relationship, the existing entity on the relationship's
+    //    base needs to point to the new entity that is (potentially) about to
+    //    be saved.
+    //  - On a reverse relationship, the new entity that is about to be created
+    //    needs to point back to the existing entity on the relationship's base.
     // Here we figure out the id we need to point to, and the property to point
     // to it in.
     $this->helper->connect_new_entities($result_entities, $results_coordinates, $edit_field_handlers_grouped);
@@ -286,7 +286,15 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         list($entity_type, $entity_id) = $result_entity_ids[$index][$handler_id];
 
         // TODO! theme this!!
-        $this->rendered_fields[$index][$handler_id] = '<div class="views-row-edit-static">' . $rendered_field . '</div>';
+        $this->rendered_fields[$index][$handler_id] = '';
+        $rendered_div = '<div class="views-row-edit-static">' . $rendered_field . '</div>';
+        if (!isset($this->view->field[$handler_id]->options['suppress_value'])) {
+          $this->rendered_fields[$index][$handler_id] = $rendered_div;
+        } else {
+          if (!$this->view->field[$handler_id]->options['suppress_value']) {
+            $this->rendered_fields[$index][$handler_id] = $rendered_div;
+          }
+        }
         $this->rendered_fields[$index][$handler_id] .= '<div class="views-row-edit-edit">' . backdrop_render($this->form[$entity_type][$entity_id][$field_name]) . '</div>';
       }
     }

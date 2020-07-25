@@ -17,6 +17,7 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
     $options = parent::option_definition();
 
     $options['textfield_size'] = array('default' => NULL);
+    $options['suppress_value'] = array('default' => FALSE);
 
     return $options;
   }
@@ -30,6 +31,13 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
       '#description' => t("The size of the textfield for this form element."),
       '#default_value' => $this->options['textfield_size'],
       '#size' => 6,
+    );
+
+    $form['suppress_value'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide field value'),
+      '#description' => t('If selected, only the field input widget will be shown.'),
+      '#default_value' => $this->options['suppress_value'],
     );
   }
 
