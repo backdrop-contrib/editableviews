@@ -322,11 +322,16 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    */
   function get_form($entities, $results_coordinates, $edit_field_handlers) {
     // Create a dynamic form ID using the base name (for quick recognition
-    // in hook_forms()) and the view name. This allows hook_form_alter() to
-    // target forms for specific views. We don't add the display name as there's
-    // no clean way to mark the separation between that and the view name.
+    // in hook_forms()), the view name and the view display name.
+    // To get display specific forms the display name needs to be part of the
+    // form ID however that means you can only use hook_form_FORM_ID_alter() to
+    // target forms at the display level, not the view level.
+    // To target views at the view level you need to use
+    // hook_form_BASE_FORM_ID_alter() to target the editableviews_entity_form
+    // base form and then use $form['#view_name'] to target specific view forms.
     // @see editableviews_forms()
-    $form_id = 'editableviews_entity_form' . '_' . $this->view->name;
+    // @see editableviews_entity_form()
+    $form_id = 'editableviews_entity_form' . '_' . $this->view->name . '_' . $this->view->current_display;
 
     // We store this rather than return it, as it's used in different places.
     $this->form = backdrop_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
