@@ -15,4 +15,3 @@ name = Test editable views with relationships
 description = Test editable views with editable fields on relationships.
 group = Editable Views
 file = tests/editableviews.test
-

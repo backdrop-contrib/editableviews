@@ -8,7 +8,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
   /**
    * Initialize a style plugin.
    */
-  function init(&$view, &$display, $options = NULL) {
+  public function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
 
     // Get the helper object. This abstracts out a number of things we do here,
@@ -16,7 +16,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $this->helper = new editableviews_style_helper($this);
   }
 
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
 
     // Todo: this should technically be on the helper, but it's faffy as it
@@ -36,14 +36,14 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
   /**
    * The options form for the given style.
    */
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     // Everything we add to the options form is common and thus in the helper.
     $this->helper->options_form($form, $form_state);
   }
 
-  function validate() {
+  public function validate() {
     $errors = parent::validate();
 
     $relationship_handlers = $this->display->handler->get_handlers('relationship');
@@ -83,7 +83,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
   /**
    * Add anything to the query that we might need to.
    */
-  function query() {
+  public function query() {
     parent::query();
 
     // Everything we do to the query is common and thus in the helper.
@@ -94,10 +94,10 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    * Helper to get the handlers for editable fields.
    *
    * @return
-   *  An array of field handlers, in the same format as get_handlers() returns,
-   *  but containing only those handlers which are for editable fields.
+   *   An array of field handlers, in the same format as get_handlers() returns,
+   *   but containing only those handlers which are for editable fields.
    */
-  function get_edit_field_handlers() {
+  public function get_edit_field_handlers() {
     $handlers = $this->display->handler->get_handlers('field');
 
     $edit_field_handlers = array();
@@ -116,7 +116,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    * @param $result
    *   The result array from $view->result
    */
-  function render_fields($result) {
+  public function render_fields($result) {
     if (!$this->uses_fields()) {
       return;
     }
@@ -136,7 +136,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    * @param $result
    *   The result array from $view->result
    */
-  function insert_form_elements($result) {
+  public function insert_form_elements($result) {
     //dsm($result, '$result');
     // Get our edit field handlers.
     $edit_field_handlers = $this->get_edit_field_handlers();
@@ -290,7 +290,8 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         $rendered_div = '<div class="views-row-edit-static">' . $rendered_field . '</div>';
         if (!isset($this->view->field[$handler_id]->options['suppress_value'])) {
           $this->rendered_fields[$index][$handler_id] = $rendered_div;
-        } else {
+        }
+        else {
           if (!$this->view->field[$handler_id]->options['suppress_value']) {
             $this->rendered_fields[$index][$handler_id] = $rendered_div;
           }
@@ -320,7 +321,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    *  their relationship.
    *  See editableviews_entity_form() for details.
    */
-  function get_form($entities, $results_coordinates, $edit_field_handlers) {
+  public function get_form($entities, $results_coordinates, $edit_field_handlers) {
     // Create a dynamic form ID using the base name (for quick recognition
     // in hook_forms()), the view name and the view display name.
     // To get display specific forms the display name needs to be part of the
@@ -340,7 +341,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
   /**
    * Render the display in this style.
    */
-  function render() {
+  public function render() {
     // Get the rendered view output.
     $view_render = parent::render();
 
@@ -376,14 +377,14 @@ class editableviews_style_helper {
    */
   public $relationship_entity_fields = array();
 
-  function __construct(&$plugin) {
+  public function __construct(&$plugin) {
     $this->plugin = &$plugin;
   }
 
   /**
    * Provide common options for editable style plugins.
    */
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     // Add a fieldset to allow setting of a creation bundle for all the
     // relationships that are non-required. This is because a non-required
     // relationship may cause empty data in the result, and if this has editable
@@ -502,7 +503,7 @@ class editableviews_style_helper {
    * on them, because we may need access to entities that editable field
    * entities need to point to when creating entities.
    */
-  function query() {
+  public function query() {
     // For each relationship that provides an entity table (including the base
     // pseudo-relationship), add the field for that entity's ID.
     $base_table = $this->plugin->view->base_table;
@@ -576,11 +577,11 @@ class editableviews_style_helper {
    *  The id of the relationship that requires a new entity.
    *
    * @return
-   *  A new, unsaved entity. The entity type is implied by the handler, and
-   *  should be known by the caller. The bundle will be set on this, given by
-   *  the style plugin's options.
+   *   A new, unsaved entity. The entity type is implied by the handler, and
+   *   should be known by the caller. The bundle will be set on this, given by
+   *   the style plugin's options.
    */
-  function entity_create($relationship_id) {
+  public function entity_create($relationship_id) {
     $entity_type = $this->relationship_entity_fields[$relationship_id]['entity_type'];
 
     // This is complex. We know the entity type, but we need to be told
@@ -639,11 +640,11 @@ class editableviews_style_helper {
    * @param $results_coordinates
    *  The combined coordinates array, containing both the forward and reverse
    *  lookups for entities and results.
-   *  @see editableviews_plugin_style_row_edit_table::get_form() for details.
+   * @see editableviews_plugin_style_row_edit_table::get_form() for details.
    * @param $edit_field_handlers_grouped
    *  The edit field handlers, grouped by relationship handler ID.
    */
-  function connect_new_entities(&$result_entities, $results_coordinates, $edit_field_handlers_grouped) {
+  public function connect_new_entities(&$result_entities, $results_coordinates, $edit_field_handlers_grouped) {
     $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
 
     //dsm($edit_field_handlers_grouped);
@@ -719,7 +720,7 @@ class editableviews_style_helper {
   /**
    * Get editable field handlers grouped by relationship id.
    */
-  function get_editable_field_handlers_grouped() {
+  public function get_editable_field_handlers_grouped() {
     $editable_field_handlers = $this->plugin->get_edit_field_handlers();
 
     $editable_field_handlers_grouped = array();

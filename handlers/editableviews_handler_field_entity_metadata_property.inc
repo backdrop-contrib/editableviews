@@ -14,7 +14,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    */
   public $editable = TRUE;
 
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
 
     $options['property'] = array('default' => NULL);
@@ -24,7 +24,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $table_data = views_fetch_data($this->table);
@@ -121,7 +121,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
   /**
    * Return the name of the entity property this handler controls.
    */
-  function field_name() {
+  public function field_name() {
     return $this->options['property'];
   }
 
@@ -133,7 +133,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    * @param $values
    *   The values retrieved from the database.
    */
-  function render($values) {
+  public function render($values) {
     // Don't return anything. We don't know the entity we're on at this point.
     // TODO: split up insert_form_elements() to do all the joining up of data
     // before parent::render_fields() is called, and set the entity on the
@@ -144,7 +144,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
   /**
    * Add the edit form for the field.
    */
-  function edit_form($entity_type, $entity, &$element, &$form_state) {
+  public function edit_form($entity_type, $entity, &$element, &$form_state) {
     // Something weird in Views admin UI causes us to come here (because the
     // style plugin gets rendered) without the options set on this handler. This
     // then causes an AJAX error because further down we access a metadata
@@ -176,6 +176,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
         case 'boolean':
           $this->edit_form_element_checkbox($element, $form_state, $wrapper);
           break;
+
         default:
           $this->edit_form_element_textfield($element, $form_state, $wrapper);
           break;
@@ -201,7 +202,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    * @param $wrapper
    *  The wrapper for the entity whose property is to be shown in the element.
    */
-  function edit_form_element_textfield(&$element, &$form_state, $wrapper) {
+  public function edit_form_element_textfield(&$element, &$form_state, $wrapper) {
     // Just do the same thing as node_content_form().
     $element[$this->options['property']] = array(
       '#type' => 'textfield',
@@ -224,7 +225,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    * @param $wrapper
    *  The wrapper for the entity whose property is to be shown in the element.
    */
-  function edit_form_element_select(&$element, &$form_state, $wrapper) {
+  public function edit_form_element_select(&$element, &$form_state, $wrapper) {
     // Just do the same thing as node_content_form().
     $element[$this->options['property']] = array(
       '#type' => 'select',
@@ -246,7 +247,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    * @param $wrapper
    *  The wrapper for the entity whose property is to be shown in the element.
    */
-  function edit_form_element_checkbox(&$element, &$form_state, $wrapper) {
+  public function edit_form_element_checkbox(&$element, &$form_state, $wrapper) {
     $default_value = $wrapper->{$this->options['property']}->raw();
     if ($this->options['reverse_boolean']) {
       $default_value = !$default_value;
@@ -264,7 +265,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
   /**
    * Helper to get the value out of the form element.
    */
-  function get_element_value($element, $form_state) {
+  public function get_element_value($element, $form_state) {
     // The element's '#parents' property gets us nearly all the way there.
     $parents = $element['#parents'];
     $parents[] = $this->options['property'];
@@ -277,7 +278,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
   /**
    * Handle the form validation for this field's form element.
    */
-  function edit_form_validate($entity_type, $entity, &$element, &$form_state) {
+  public function edit_form_validate($entity_type, $entity, &$element, &$form_state) {
     // Wrappers don't have a way of testing the waters to validate, but we can
     // attempt to set the property and catch an exception.
     try {
@@ -300,7 +301,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
   /**
    * Handle the form submission for this field's form element.
    */
-  function edit_form_submit($entity_type, $entity, &$element, &$form_state) {
+  public function edit_form_submit($entity_type, $entity, &$element, &$form_state) {
     // Get the value out of the form state.
     $value = $this->get_element_value($element, $form_state);
     if ($this->options['reverse_boolean']) {

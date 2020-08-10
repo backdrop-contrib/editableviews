@@ -17,7 +17,7 @@
  */
 class EditableViewsBaseWebTestCase extends DrupalWebTestCase {
 
-  function setUp() {
+  public function setUp() {
     parent::setUp(array('editableviews', 'features', 'entityreference', 'editableviews_test_feature', 'editableviews_test'));
   }
 
@@ -39,7 +39,7 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
   /**
    * Test basic node view 'test_editable_views_node_title'.
    */
-  function testNodeTitleView() {
+  public function testNodeTitleView() {
     $first_node_title = $this->randomName();
     $first_node = $this->drupalCreateNode(array(
       'title' => $first_node_title,
@@ -95,7 +95,7 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
   /**
    * Test basic node view 'editable_views_node_fields'.
    */
-  function testNodeFieldsView() {
+  public function testNodeFieldsView() {
     $first_node_title = $this->randomName();
     $first_node = $this->drupalCreateNode(array(
       'title' => $first_node_title,
@@ -138,7 +138,7 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
     // Save the form with changes to the first node, but with a field value on
     // the second node that will fail validation, because
     // editableviews_test_field_attach_validate() will reject 'banana'.
-     // Ensure this string is definitely NOT 'banana'.
+    // Ensure this string is definitely NOT 'banana'.
     $new_value_field_test_editable_text     = $this->randomString(8);
     $new_value_field_test_editable_options  = 1;
     $edit = array(
@@ -185,7 +185,7 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
   /**
    * Test basic node view 'test_editable_views_node_properties'.
    */
-  function testNodePropertiesView() {
+  public function testNodePropertiesView() {
     $first_node_title = $this->randomName();
     $first_node = $this->drupalCreateNode(array(
       'title' => $first_node_title,
@@ -264,7 +264,7 @@ class EditableViewsEntityReferenceWebTestCase extends EditableViewsBaseWebTestCa
    *
    * Contains a relationship to another node type via a backwards reference.
    */
-  function testNodeTitleBackwardsRelationshipView() {
+  public function testNodeTitleBackwardsRelationshipView() {
     // We prefix the node titles to force the order of items in the View to be
     // predictable. Otherwise, we can't reliably (easily!) test the presence of
     // form elements for the empty nodes.
@@ -340,7 +340,7 @@ class EditableViewsEntityReferenceWebTestCase extends EditableViewsBaseWebTestCa
    *
    * Contains a relationship to another node type via a forwards reference.
    */
-  function testNodeTitleForwardsRelationshipView() {
+  public function testNodeTitleForwardsRelationshipView() {
     // We prefix the node titles to force the order of items in the View to be
     // predictable. Otherwise, we can't reliably (easily!) test the presence of
     // form elements for the empty nodes.

@@ -13,7 +13,7 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
    */
   public $editable = TRUE;
 
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
 
     $options['textfield_size'] = array('default' => NULL);
@@ -22,7 +22,7 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $form['textfield_size'] = array(
@@ -44,14 +44,14 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
   /**
    * Return the name of the entity property this handler controls.
    */
-  function field_name() {
+  public function field_name() {
     return 'title';
   }
 
   /**
    * Return the edit form for the field.
    */
-  function edit_form($entity_type, $entity, &$element, &$form_state) {
+  public function edit_form($entity_type, $entity, &$element, &$form_state) {
     // Just do the same thing as node_content_form().
     $type = node_type_get_type($entity);
     $element['title'] = array(
@@ -75,14 +75,14 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
   /**
    * Handle the form validation for this field's form element.
    */
-  function edit_form_validate() {
+  public function edit_form_validate() {
     // Nothing to do.
   }
 
   /**
    * Handle the form submission for this field's form element.
    */
-  function edit_form_submit($entity_type, $entity, &$element, &$form_state) {
+  public function edit_form_submit($entity_type, $entity, &$element, &$form_state) {
     $parents = $element['#parents'];
     $parents[] = 'title';
 

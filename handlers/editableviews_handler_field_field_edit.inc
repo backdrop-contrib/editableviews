@@ -15,7 +15,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    */
   public $editable = TRUE;
 
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
 
     // We can't realistically provide a default widget type, because there may
@@ -29,7 +29,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
     return $options;
   }
 
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     $field = field_info_field($this->definition['field_name']);
@@ -75,7 +75,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
   /**
    * Return the name of the entity property this handler controls.
    */
-  function field_name() {
+  public function field_name() {
     return $this->definition['field_name'];
   }
 
@@ -95,7 +95,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    * @param &$form_state
    *  The form state.
    */
-  function edit_form($entity_type, $entity, &$element, &$form_state) {
+  public function edit_form($entity_type, $entity, &$element, &$form_state) {
     list($entity_id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
 
     // TODO: this prevents this method being static. This would mean we could
@@ -174,7 +174,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    *  An array of errors, in the same format as expected by
    *  hook_field_attach_validate().
    */
-  function edit_form_validate($entity_type, $entity, &$element, &$form_state, &$errors) {
+  public function edit_form_validate($entity_type, $entity, &$element, &$form_state, &$errors) {
     list($entity_id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
     $field_name = $this->definition['field_name'];
     $field_instance = field_info_instance($entity_type, $field_name, $bundle);
@@ -214,7 +214,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    *  An array of errors, in the same format as expected by
    *  hook_field_attach_validate().
    */
-  function edit_form_validate_errors($entity_type, $entity, &$element, &$form_state, &$errors) {
+  public function edit_form_validate_errors($entity_type, $entity, &$element, &$form_state, &$errors) {
     list($entity_id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
     $field_name = $this->definition['field_name'];
     $field_instance = field_info_instance($entity_type, $field_name, $bundle);
@@ -234,7 +234,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
   /**
    * Handle the form submission for this field's form element.
    */
-  function edit_form_submit($entity_type, $entity, &$element, &$form_state) {
+  public function edit_form_submit($entity_type, $entity, &$element, &$form_state) {
     list($entity_id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
     $field_name = $this->definition['field_name'];
     $field_instance = field_info_instance($entity_type, $field_name, $bundle);
@@ -253,7 +253,7 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
     // the values in $form_state.
     editableviews_field_invoke_field_default($field_instance, 'extract_form_values', $entity_type, $entity, $element, $form_state);
 
-    editableviews_field_invoke_field_default($field_instance, 'submit',               $entity_type, $entity, $element, $form_state);
+    editableviews_field_invoke_field_default($field_instance, 'submit', $entity_type, $entity, $element, $form_state);
   }
 
 }

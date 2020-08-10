@@ -6,7 +6,6 @@
  * Ported from Ctools Fields functionality.
  */
 
-
 /**
  * Fake an instance of a field.
  *

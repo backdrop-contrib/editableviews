@@ -8,7 +8,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
   /**
    * Initialize a style plugin.
    */
-  function init(&$view, &$display, $options = NULL) {
+  public function init(&$view, &$display, $options = NULL) {
     parent::init($view, $display, $options);
 
     // Get the helper object. This abstracts out a number of things we do here,
@@ -16,7 +16,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
     $this->helper = new editableviews_style_helper($this);
   }
 
-  function option_definition() {
+  public function option_definition() {
     $options = parent::option_definition();
 
     // Todo: this should technically be on the helper, but it's faffy as it
@@ -31,14 +31,14 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
   /**
    * The options form for the given style.
    */
-  function options_form(&$form, &$form_state) {
+  public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
     // Everything we add to the options form is common and thus in the helper.
     $this->helper->options_form($form, $form_state);
   }
 
-  function validate() {
+  public function validate() {
     $errors = parent::validate();
 
     $relationship_handlers = $this->display->handler->get_handlers('relationship');
@@ -57,14 +57,14 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
 
       if (!isset($relationship_handler->definition['editableviews_direction'])) {
         $errors[] = t("The relationship '@relationship' is not compatible with editable fields that may cause creation of entities for empty data. The relationship should be set to be 'required'.", array(
-          '@relationship' => $relationship_handler->options['label']
+          '@relationship' => $relationship_handler->options['label'],
         ));
       }
 
       if (!isset($this->options['relationship_creation_bundle'][$relationship_id])) {
         $errors[] = t("Display @display is set to use a editable fields and the '@relationship' relationship is not set to be required: the bundle of entities to create on this relationship must be set in the Editable Table options.", array(
           '@display' => $this->display->display_title,
-          '@relationship' => $relationship_handler->options['label']
+          '@relationship' => $relationship_handler->options['label'],
         ));
       }
     }
@@ -75,7 +75,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
   /**
    * Add anything to the query that we might need to.
    */
-  function query() {
+  public function query() {
     parent::query();
 
     // Everything we do to the query is common and thus in the helper.
@@ -86,10 +86,10 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
    * Helper to get the handlers for editable fields.
    *
    * @return
-   *  An array of field handlers, in the same format as get_handlers() returns,
-   *  but containing only those handlers which are for editable fields.
+   *   An array of field handlers, in the same format as get_handlers() returns,
+   *   but containing only those handlers which are for editable fields.
    */
-  function get_edit_field_handlers() {
+  public function get_edit_field_handlers() {
     $handlers = $this->display->handler->get_handlers('field');
 
     $edit_field_handlers = array();
@@ -108,7 +108,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
    * @param $result
    *   The result array from $view->result
    */
-  function render_fields($result) {
+  public function render_fields($result) {
     if (!$this->uses_fields()) {
       return;
     }
@@ -128,7 +128,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
    * @param $result
    *   The result array from $view->result
    */
-  function insert_form_elements($result) {
+  public function insert_form_elements($result) {
     // Get our edit field handlers.
     $edit_field_handlers = $this->get_edit_field_handlers();
     if (empty($edit_field_handlers)) {
@@ -273,7 +273,8 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
         $rendered_div = '<div class="views-row-edit-static">' . $rendered_field . '</div>';
         if (!isset($this->view->field[$handler_id]->options['suppress_value'])) {
           $this->rendered_fields[$index][$handler_id] = $rendered_div;
-        } else {
+        }
+        else {
           if (!$this->view->field[$handler_id]->options['suppress_value']) {
             $this->rendered_fields[$index][$handler_id] = $rendered_div;
           }
@@ -303,7 +304,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
    *  their relationship.
    *  See editableviews_entity_form() for details.
    */
-  function get_form($entities, $results_coordinates, $edit_field_handlers) {
+  public function get_form($entities, $results_coordinates, $edit_field_handlers) {
     // Create a dynamic form ID using the base name (for quick recognition
     // in hook_forms()) and the view name. This allows hook_form_alter() to
     // target forms for specific views. We don't add the display name as there's
@@ -318,7 +319,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
   /**
    * Render the display in this style.
    */
-  function render() {
+  public function render() {
     // Get the rendered view output.
     $view_render = parent::render();
 
