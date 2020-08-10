@@ -74,7 +74,7 @@ function editableviews_forms($form_id, $args) {
 function editableviews_entity_form($form, &$form_state, $entities, $results_coordinates, $field_handlers, $view) {
   // Include this here as it's fairly likely we have handlers that need it;
   // rather than let the handler class include it over and over again.
-  include_once(backdrop_get_path('module', 'editablefields') . 'editableviews.fields.inc');
+  include_once(backdrop_get_path('module', 'editableviews') . '/editableviews.fields.inc');
 
   //dsm(func_get_args(), 'form builder params');
   //dsm($entities);
@@ -166,7 +166,7 @@ function editableviews_entity_form($form, &$form_state, $entities, $results_coor
  * Adapted from fape_field_edit_field_form_validate().
  */
 function editableviews_entity_form_validate($form, &$form_state) {
-  include_once(backdrop_get_path('module', 'editablefields') . 'editableviews.fields.inc');
+  include_once(backdrop_get_path('module', 'editableviews') . '/editableviews.fields.inc');
 
   $field_handlers = $form['#field_handlers'];
 
@@ -235,7 +235,7 @@ function editableviews_entity_form_validate($form, &$form_state) {
  * TODO: consider implementing this.
  */
 function editableviews_entity_form_submit_build_values($form, &$form_state) {
-  include_once(backdrop_get_path('module', 'editablefields') . 'editableviews.fields.inc');
+  include_once(backdrop_get_path('module', 'editableviews') . '/editableviews.fields.inc');
 
   //dsm($form);
   //dsm($form_state, 'fs');
