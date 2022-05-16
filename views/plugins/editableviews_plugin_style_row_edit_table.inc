@@ -530,8 +530,8 @@ class editableviews_style_helper {
       // Get the entity type from the table.
       $table_data = views_fetch_data($table);
 
-      if (!isset($table_data['table']['entity type'])) {
-        // Not an entity base table relationship: skip it.
+      if (!isset($table_data['table']['entity type']) || !isset($table_data['table']['base']['field'])) {
+        // Not an entity base table relationship or missing needed data: skip it.
         continue;
       }
 
