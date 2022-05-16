@@ -13,7 +13,7 @@
 function editableviews_views_api() {
   return array(
     'api' => '3.0',
-    'path' => backdrop_get_path('module', 'editableviews'),
+    'path' => backdrop_get_path('module', 'editableviews') . '/views/includes',
   );
 }
 
@@ -423,13 +423,13 @@ function editableviews_module_implements_alter(&$implementations, $hook) {
  */
 function editableviews_autoload_info() {
   return array(
-    'editableviews_plugin_style_row_edit_table' => 'editableviews_plugin_style_row_edit_table.inc',
-    'editableviews_plugin_style_edit_unformatted' => 'editableviews_plugin_style_edit_unformatted.inc',
-    'editableviews_style_helper' => 'editableviews_plugin_style_row_edit_table.inc',
-    'editableviews_handler_field_entity_metadata_property' => 'handlers/editableviews_handler_field_entity_metadata_property.inc',
-    'editableviews_handler_field_field_edit' => 'handlers/editableviews_handler_field_field_edit.inc',
-    'editableviews_handler_field_node_title_edit' => 'handlers/editableviews_handler_field_node_title_edit.inc',
-    'editableviews_handler_field_save_button_jump_link' => 'handlers/editableviews_handler_field_save_button_jump_link.inc',
+    'editableviews_plugin_style_row_edit_table' => 'views/plugins/editableviews_plugin_style_row_edit_table.inc',
+    'editableviews_plugin_style_edit_unformatted' => 'views/plugins/editableviews_plugin_style_edit_unformatted.inc',
+    'editableviews_style_helper' => 'views/plugins/editableviews_plugin_style_row_edit_table.inc',
+    'editableviews_handler_field_entity_metadata_property' => 'views/handlers/editableviews_handler_field_entity_metadata_property.inc',
+    'editableviews_handler_field_field_edit' => 'views/handlers/editableviews_handler_field_field_edit.inc',
+    'editableviews_handler_field_node_title_edit' => 'views/handlers/editableviews_handler_field_node_title_edit.inc',
+    'editableviews_handler_field_save_button_jump_link' => 'views/handlers/editableviews_handler_field_save_button_jump_link.inc',
   );
 }
 

@@ -21,6 +21,7 @@ function editableviews_views_plugins() {
       'uses options' => TRUE,
       'type' => 'normal',
       'help topic' => 'style-table',
+      'path' => backdrop_get_path('module', 'editableviews') . '/views/handlers',
     ),
     'editableviews_unformatted' => array(
       'title' => t('Editable Unformatted'),
@@ -34,6 +35,7 @@ function editableviews_views_plugins() {
       'uses options' => TRUE,
       'type' => 'normal',
       'help topic' => 'style-unformatted',
+      'path' => backdrop_get_path('module', 'editableviews') . '/views/handlers',
     ),
   );
 
