@@ -30,7 +30,7 @@ Currently the following relationships are supported for creating new entities:
 
 ## Documentation
 
-- View and edit documentation in the [wiki](https://github.com/backdrop-contrib/editable_views/wiki).
+- View and edit documentation in the [wiki](https://github.com/backdrop-contrib/editableviews/wiki).
 
 ## Issues
 
