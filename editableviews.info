@@ -1,11 +1,10 @@
 name = Editable Views
 description = Allows entity data in a view to be edited.
 package = Views
+backdrop = 1.x
+type = module
+
 dependencies[] = views
 dependencies[] = entity
 dependencies[] = entity_plus
 dependencies[] = field_ui
-backdrop = 1.x
-type = module
-test_dependencies[] = entityreference
-test_dependencies[] = features

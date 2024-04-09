@@ -1,0 +1,31 @@
+{
+    "_config_name": "field.instance.node.editable_views_tests.field_test_editable_options",
+    "field_name": "field_test_editable_options",
+    "entity_type": "node",
+    "bundle": "editable_views_tests",
+    "label": "Test editable options",
+    "widget": {
+        "weight": "-3",
+        "type": "options_select",
+        "module": "options",
+        "active": 1,
+        "settings": []
+    },
+    "description": "",
+    "required": 0,
+    "deleted": 0,
+    "default_value": null,
+    "default_value_function": null,
+    "settings": {
+        "user_register_form": false
+    },
+    "display": {
+        "default": {
+            "label": "hidden",
+            "type": "list_default",
+            "settings": [],
+            "module": "list",
+            "weight": 1
+        }
+    }
+}

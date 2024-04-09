@@ -137,7 +137,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    *   The result array from $view->result
    */
   public function insert_form_elements($result) {
-    //dsm($result, '$result');
     // Get our edit field handlers.
     $edit_field_handlers = $this->get_edit_field_handlers();
     if (empty($edit_field_handlers)) {

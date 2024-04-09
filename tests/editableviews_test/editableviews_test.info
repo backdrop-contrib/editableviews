@@ -3,4 +3,6 @@ description = Test module for Editable Views
 backdrop = 1.x
 type = module
 hidden = TRUE
+
 dependencies[] = editableviews
+dependencies[] = entityreference

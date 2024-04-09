@@ -1,0 +1,102 @@
+{
+  "_config_name": "views.view.test_editable_views_node_properties",
+  "name": "test_editable_views_node_properties",
+  "description": "",
+  "tag": "default",
+  "disabled": false,
+  "base_table": "node",
+  "human_name": "test_editable_views_node_properties",
+  "core": 7,
+  "display": {
+    "default": {
+      "display_title": "Default",
+      "display_plugin": "default",
+      "display_options": {
+        "query": {
+          "type": "views_query",
+          "options": []
+        },
+        "title": "Test editable views node properties",
+        "use_more_always": false,
+        "access": {
+          "type": "perm"
+        },
+        "cache": {
+          "type": "none"
+        },
+        "exposed_form": {
+          "type": "basic"
+        },
+        "pager": {
+          "type": "some",
+          "options": {
+            "items_per_page": "10"
+          }
+        },
+        "style_plugin": "editableviews_table",
+        "fields": {
+          "title": {
+            "id": "title",
+            "table": "node",
+            "field": "title",
+            "label": "",
+            "alter": {
+              "word_boundary": false,
+              "ellipsis": false
+            }
+          },
+          "metadata_property_editable": {
+            "id": "metadata_property_editable",
+            "table": "node",
+            "field": "metadata_property_editable",
+            "label": "Status",
+            "property": "status"
+          },
+          "metadata_property_editable_1": {
+            "id": "metadata_property_editable_1",
+            "table": "node",
+            "field": "metadata_property_editable",
+            "label": "Promote",
+            "property": "promote"
+          },
+          "metadata_property_editable_2": {
+            "id": "metadata_property_editable_2",
+            "table": "node",
+            "field": "metadata_property_editable",
+            "label": "Sticky",
+            "property": "sticky"
+          }
+        },
+        "sorts": {
+          "created": {
+            "id": "created",
+            "table": "node",
+            "field": "created",
+            "order": "DESC"
+          }
+        },
+        "filters": {
+          "type": {
+            "id": "type",
+            "table": "node",
+            "field": "type",
+            "value": {
+              "editable_views_test_node": "editable_views_test_node"
+            }
+          }
+        }
+      }
+    },
+    "page": {
+      "display_title": "Page",
+      "display_plugin": "page",
+      "display_options": {
+        "query": {
+          "type": "views_query",
+          "options": []
+        },
+        "path": "test-editable-views-node-properties"
+      }
+    }
+  }
+}
