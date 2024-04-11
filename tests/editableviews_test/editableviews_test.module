@@ -17,7 +17,7 @@ function editableviews_test_field_attach_validate($entity_type, $entity, &$error
   static $error_count = 0;
 
   $items = field_get_items($entity_type, $entity, 'field_test_editable_text');
-  $field_value = $items[0]['value'];
+  $field_value = (!empty($items[0]['value'])) ? $items[0]['value'] : NULL;
 
   if ($field_value == 'banana') {
     $error_count++;
