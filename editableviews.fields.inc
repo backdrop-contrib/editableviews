@@ -163,7 +163,7 @@ function editableviews_field_label($field_name) {
  *   - delete
  *   - delete revision
  *   - view
- *   - prepare translation
+ *   - prepare translation.
  * @param string $entity_type
  *   The type of $entity; e.g. 'node' or 'user'.
  * @param object $entity

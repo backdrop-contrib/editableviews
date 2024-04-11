@@ -7,6 +7,9 @@
  */
 class editableviews_handler_field_save_button_jump_link extends views_handler_field {
 
+  /**
+ *
+ */
   public function option_definition() {
     $options = parent::option_definition();
 
@@ -15,6 +18,9 @@ class editableviews_handler_field_save_button_jump_link extends views_handler_fi
     return $options;
   }
 
+  /**
+ *
+ */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 

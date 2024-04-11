@@ -63,7 +63,6 @@ function editableviews_views_data_alter(&$data) {
     // that the field's module doesn't implement hook_field_views_data(),
     // because if it does, it possibly means our one-size-fits-all approach
     // here is unsuitable for the field. TODO!
-
     $table = _field_sql_storage_tablename($field);
     $column = $field['field_name'];
     $keys = array_keys($field['columns']);

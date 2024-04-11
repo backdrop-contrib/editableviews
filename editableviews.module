@@ -42,48 +42,44 @@ function editableviews_forms($form_id, $args) {
  * @see editableviews_forms()
  *
  * @param $entities
- *  An array of entities to get the form for, keyed first by entity type and
- *  then by entity id. The ids may be fake in the case of new, unsaved entities.
- *  Furthermore, new entities should have a property
- *  'editableviews_exposed_fields'. This should be an array of field names
- *  corresponding to editable field handlers on the view. A value in at least
- *  one of these fields on the entity causes it to be saved by
- *  editableviews_entity_form_submit_save(). This allows the user
- *  to leave a blank part of the result empty. However, it does not account for
- *  the fact that there may be default values in the field widgets!
- *  TODO: consider this problem!
+ *   An array of entities to get the form for, keyed first by entity type and
+ *   then by entity id. The ids may be fake in the case of new, unsaved entities.
+ *   Furthermore, new entities should have a property
+ *   'editableviews_exposed_fields'. This should be an array of field names
+ *   corresponding to editable field handlers on the view. A value in at least
+ *   one of these fields on the entity causes it to be saved by
+ *   editableviews_entity_form_submit_save(). This allows the user
+ *   to leave a blank part of the result empty. However, it does not account for
+ *   the fact that there may be default values in the field widgets!
+ *   TODO: consider this problem!
  * @param $results_coordinates
- *  An array containing coordinates lookups for getting entity type and entity
- *  from row id and relationship, and the same the other way round. Contains:
- *  - 'entities_to_results': A nested array keyed by entity type then entity
+ *   An array containing coordinates lookups for getting entity type and entity
+ *   from row id and relationship, and the same the other way round. Contains:
+ *   - 'entities_to_results': A nested array keyed by entity type then entity
  *    id. The final values are flat arrays of the relationship id and result
  *    index.
- *  - 'results_to_entities': A nested array keyed by relationship id then
+ *   - 'results_to_entities': A nested array keyed by relationship id then
  *    result index. The final values are flat arrays of the entity type and
  *    entity id.
- *  Conceptually, the pair (relationship id, result index) can be visualized as
- *  the coordinates that specify which cells in the table the entity occupies:
- *  the index gives the row and the relationship id one or more columns.
+ *   Conceptually, the pair (relationship id, result index) can be visualized as
+ *   the coordinates that specify which cells in the table the entity occupies:
+ *   the index gives the row and the relationship id one or more columns.
  * @param $field_handlers
- *  An array of the editable Views field handlers to show the form elements for.
- *  This should be grouped by relationship ID, with the base table for the
- *  view's base.
+ *   An array of the editable Views field handlers to show the form elements for.
+ *   This should be grouped by relationship ID, with the base table for the
+ *   view's base.
  * @param $view
- *  The view object.
+ *   The view object.
  */
 function editableviews_entity_form($form, &$form_state, $entities, $results_coordinates, $field_handlers, $view) {
   // Include this here as it's fairly likely we have handlers that need it;
   // rather than let the handler class include it over and over again.
   include_once backdrop_get_path('module', 'editableviews') . '/editableviews.fields.inc';
 
-  //dsm(func_get_args(), 'form builder params');
-  //dsm($entities);
-  //dsm($field_handlers);
-
   $form['#tree'] = TRUE;
 
   $form['#entity_ids'] = array();
-  //$form['#field_names'] = $fields;
+  // $form['#field_names'] = $fields;
   $form['#field_handlers'] = $field_handlers;
 
   // Put these in the form in case custom form handlers need to look at them.
@@ -156,7 +152,6 @@ function editableviews_entity_form($form, &$form_state, $entities, $results_coor
     'save' => 'editableviews_entity_form_submit_save',
   );
 
-  //dsm($form, 'end of form builder');
   return $form;
 }
 
@@ -236,9 +231,6 @@ function editableviews_entity_form_validate($form, &$form_state) {
  */
 function editableviews_entity_form_submit_build_values($form, &$form_state) {
   include_once backdrop_get_path('module', 'editableviews') . '/editableviews.fields.inc';
-
-  //dsm($form);
-  //dsm($form_state, 'fs');
 
   $field_handlers = $form['#field_handlers'];
   // Act on each entity in turn.
