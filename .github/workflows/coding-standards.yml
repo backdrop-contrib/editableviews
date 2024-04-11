@@ -1,8 +1,8 @@
 name: Code Checks
 on: [pull_request]
 jobs:
-  if: false
   codechecks:
+    if: false
     name: Run phpcs
     runs-on: ubuntu-20.04
     timeout-minutes: 15
