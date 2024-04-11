@@ -4,5 +4,9 @@ backdrop = 1.x
 type = module
 hidden = TRUE
 
+dependencies[] = views
+dependencies[] = entity
+dependencies[] = entity_plus
+dependencies[] = field_ui
 dependencies[] = editableviews
 dependencies[] = entityreference
