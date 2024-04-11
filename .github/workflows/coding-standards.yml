@@ -40,6 +40,11 @@ jobs:
         with:
           path: modules/${{ env.REPO_NAME }}
 
+      - name: Checkout Entity Plus
+        uses: actions/checkout@v4
+        with:
+          path: modules/entity_plus
+
       - name: Run PHPStan
         run: |
           cd modules/${{ env.REPO_NAME }}
