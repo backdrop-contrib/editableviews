@@ -1,0 +1,97 @@
+{
+  "_config_name": "views.view.test_editable_views_node_fields",
+  "name": "test_editable_views_node_fields",
+  "description": "",
+  "tag": "default",
+  "disabled": false,
+  "base_table": "node",
+  "human_name": "Test editable views node fields",
+  "core": 7,
+  "display": {
+    "default": {
+      "display_title": "Default",
+      "display_plugin": "default",
+      "display_options": {
+        "query": {
+          "type": "views_query",
+          "options": []
+        },
+        "title": "Test editable views node title",
+        "use_more_always": false,
+        "access": {
+          "type": "perm"
+        },
+        "cache": {
+          "type": "none"
+        },
+        "exposed_form": {
+          "type": "basic"
+        },
+        "pager": {
+          "type": "some",
+          "options": {
+            "items_per_page": "10"
+          }
+        },
+        "style_plugin": "editableviews_table",
+        "fields": {
+          "field_test_editable_text_editable": {
+            "id": "field_test_editable_text_editable",
+            "table": "field_data_field_test_editable_text",
+            "field": "field_test_editable_text_editable",
+            "widget_type": "0",
+            "suppress_label": 0,
+            "suppress_description": 0
+          },
+          "field_test_editable_options_editable": {
+            "id": "field_test_editable_options_editable",
+            "table": "field_data_field_test_editable_options",
+            "field": "field_test_editable_options_editable",
+            "widget_type": "0",
+            "suppress_label": 0,
+            "suppress_description": 0
+          }
+        },
+        "sorts": {
+          "created": {
+            "id": "created",
+            "table": "node",
+            "field": "created",
+            "order": "DESC"
+          }
+        },
+        "filters": {
+          "status": {
+            "id": "status",
+            "table": "node",
+            "field": "status",
+            "value": 1,
+            "group": 1,
+            "expose": {
+              "operator": false
+            }
+          },
+          "type": {
+            "id": "type",
+            "table": "node",
+            "field": "type",
+            "value": {
+              "editable_views_tests": "editable_views_tests"
+            }
+          }
+        }
+      }
+    },
+    "page": {
+      "display_title": "Page",
+      "display_plugin": "page",
+      "display_options": {
+        "query": {
+          "type": "views_query",
+          "options": []
+        },
+        "path": "test-editable-views-node-fields"
+      }
+    }
+  }
+}

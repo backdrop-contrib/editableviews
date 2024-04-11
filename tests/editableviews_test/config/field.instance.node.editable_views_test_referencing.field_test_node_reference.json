@@ -1,0 +1,43 @@
+{
+    "_config_name": "field.instance.node.editable_views_test_referencing.field_test_node_reference",
+    "field_name": "field_test_node_reference",
+    "entity_type": "node",
+    "bundle": "editable_views_test_referencing",
+    "label": "Test node reference",
+    "widget": {
+        "weight": "-2",
+        "type": "entityreference_autocomplete",
+        "module": "entityreference",
+        "active": 1,
+        "settings": {
+            "match_operator": "CONTAINS",
+            "size": "60",
+            "hide_ids": 0,
+            "references_dialog_edit": 0,
+            "references_dialog_add": 0,
+            "references_dialog_search": 0,
+            "path": "",
+            "references_dialog_search_view": ""
+        }
+    },
+    "description": "",
+    "required": 0,
+    "deleted": 0,
+    "default_value": null,
+    "default_value_function": null,
+    "settings": {
+        "user_register_form": false
+    },
+    "display": {
+        "default": {
+            "label": "hidden",
+            "type": "entityreference_label",
+            "settings": {
+                "link": false,
+                "bypass_access": false
+            },
+            "module": "entityreference",
+            "weight": 1
+        }
+    }
+}
