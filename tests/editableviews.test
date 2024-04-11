@@ -21,8 +21,8 @@ class EditableViewsBaseWebTestCase extends BackdropWebTestCase {
     parent::setUp(array(
       'editableviews',
       'entityreference',
-      'editableviews_test',
     ));
+    module_enable(array('editableviews_test'));
 
     return TRUE;
   }
