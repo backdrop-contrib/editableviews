@@ -285,7 +285,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
             $this->rendered_fields[$index][$handler_id] = $rendered_div;
           }
         }
-        $this->rendered_fields[$index][$handler_id] .= '<div class="views-row-edit-edit">' . drupal_render($this->form[$entity_type][$entity_id][$field_name]) . '</div>';
+        $this->rendered_fields[$index][$handler_id] .= '<div class="views-row-edit-edit">' . backdrop_render($this->form[$entity_type][$entity_id][$field_name]) . '</div>';
       }
     }
   }
@@ -319,7 +319,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
     $form_id = 'editableviews_entity_form' . '_' . $this->view->name;
 
     // We store this rather than return it, as it's used in different places.
-    $this->form = drupal_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
+    $this->form = backdrop_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
   }
 
   /**

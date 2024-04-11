@@ -27,7 +27,7 @@ function editableviews_views_plugins() {
       'title' => t('Editable Unformatted'),
       'help' => t('Displays a unformatted view whose fields can be edited.'),
       'handler' => 'editableviews_plugin_style_edit_unformatted',
-      'theme path' => drupal_get_path('module', 'views') . '/theme',
+      'theme path' => backdrop_get_path('module', 'views') . '/theme',
       'theme' => 'views_view_unformatted',
       'uses row plugin' => TRUE,
       'uses row class' => TRUE,

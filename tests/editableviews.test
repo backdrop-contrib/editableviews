@@ -17,6 +17,9 @@
  */
 class EditableViewsBaseWebTestCase extends BackdropWebTestCase {
 
+  /**
+ *
+ */
   function setUp() {
     parent::setUp(array(
       'editableviews',
@@ -24,7 +27,7 @@ class EditableViewsBaseWebTestCase extends BackdropWebTestCase {
       'editableviews_test',
     ));
 
-    return TRUE;
+      return TRUE;
   }
 
 }
@@ -319,7 +322,7 @@ class EditableViewsEntityReferenceWebTestCase extends EditableViewsBaseWebTestCa
     $entities = $query->entityCondition('entity_type', 'node')
       ->propertyCondition('type', 'editable_views_test_referencing')
       ->propertyCondition('title', $new_node_title)
-      ->range(0,1)
+      ->range(0, 1)
       ->execute();
 
     $this->assertFalse(empty($entities['node']), t("A new referencing node has been created."));

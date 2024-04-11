@@ -115,7 +115,7 @@ function editableviews_fields_get_field_formatter_info($fields) {
       }
     }
   }
-  drupal_alter('field_formatter_info', $info);
+  backdrop_alter('field_formatter_info', $info);
   return $info;
 }
 
