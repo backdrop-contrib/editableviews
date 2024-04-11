@@ -15,6 +15,9 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    */
   public $editable = TRUE;
 
+  /**
+ *
+ */
   public function option_definition() {
     $options = parent::option_definition();
 
@@ -29,6 +32,9 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
     return $options;
   }
 
+  /**
+ *
+ */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
@@ -86,14 +92,14 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    * non-FieldAPI fields (eg node title) to also provide a form element.
    *
    * @param $entity_type
-   *  The entity type.
+   *   The entity type.
    * @param $entity
-   *  The entity.
+   *   The entity.
    * @param &$element
-   *  The partial form, at $form[ENTITY_ID]. This is passed by reference and
-   *  should be altered in place.
+   *   The partial form, at $form[ENTITY_ID]. This is passed by reference and
+   *   should be altered in place.
    * @param &$form_state
-   *  The form state.
+   *   The form state.
    */
   public function edit_form($entity_type, $entity, &$element, &$form_state) {
     list($entity_id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
@@ -163,16 +169,16 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    * Handle the form validation for this field's form element.
    *
    * @param $entity_type
-   *  The entity type.
+   *   The entity type.
    * @param $entity
-   *  The entity.
+   *   The entity.
    * @param &$element
-   *  The partial form, at $form[ENTITY_ID].
+   *   The partial form, at $form[ENTITY_ID].
    * @param &$form_state
-   *  The form state.
+   *   The form state.
    * @param &$errors
-   *  An array of errors, in the same format as expected by
-   *  hook_field_attach_validate().
+   *   An array of errors, in the same format as expected by
+   *   hook_field_attach_validate().
    */
   public function edit_form_validate($entity_type, $entity, &$element, &$form_state, &$errors) {
     list($entity_id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
@@ -203,16 +209,16 @@ class editableviews_handler_field_field_edit extends views_handler_field_field {
    * Set form validation errors for this field's form element.
    *
    * @param $entity_type
-   *  The entity type.
+   *   The entity type.
    * @param $entity
-   *  The entity.
+   *   The entity.
    * @param &$element
-   *  The partial form, at $form[ENTITY_ID].
+   *   The partial form, at $form[ENTITY_ID].
    * @param &$form_state
-   *  The form state.
+   *   The form state.
    * @param &$errors
-   *  An array of errors, in the same format as expected by
-   *  hook_field_attach_validate().
+   *   An array of errors, in the same format as expected by
+   *   hook_field_attach_validate().
    */
   public function edit_form_validate_errors($entity_type, $entity, &$element, &$form_state, &$errors) {
     list($entity_id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);

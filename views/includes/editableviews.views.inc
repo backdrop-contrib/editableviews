@@ -27,7 +27,7 @@ function editableviews_views_plugins() {
       'title' => t('Editable Unformatted'),
       'help' => t('Displays a unformatted view whose fields can be edited.'),
       'handler' => 'editableviews_plugin_style_edit_unformatted',
-      'theme path' => drupal_get_path('module', 'views') . '/theme',
+      'theme path' => backdrop_get_path('module', 'views') . '/theme',
       'theme' => 'views_view_unformatted',
       'uses row plugin' => TRUE,
       'uses row class' => TRUE,
@@ -63,7 +63,6 @@ function editableviews_views_data_alter(&$data) {
     // that the field's module doesn't implement hook_field_views_data(),
     // because if it does, it possibly means our one-size-fits-all approach
     // here is unsuitable for the field. TODO!
-
     $table = _field_sql_storage_tablename($field);
     $column = $field['field_name'];
     $keys = array_keys($field['columns']);

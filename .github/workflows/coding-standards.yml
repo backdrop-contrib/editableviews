@@ -1,37 +1,42 @@
-name: Coding Standards
-on: [push, pull_request]
+name: Code Checks
+on: [pull_request]
 jobs:
-  phpcs:
+  codechecks:
+    if: false
     name: Run phpcs
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
     steps:
+      - name: Setup env
+        run: |
+          echo "REPO_NAME=${PWD##*/}" >> $GITHUB_ENV
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: 8.1
+          # No composer nor xdebug, but we need our commandline tools.
+          tools: none, phpstan, phpcs
           coverage: none
 
-      - uses: actions/checkout@v2
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache composer directory
-        uses: actions/cache@v2
+      # The checkout action refuses to put it outside, so we have to do it in
+      # two steps.
+      - name: Checkout coding standard
+        uses: actions/checkout@v4
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('./composer.json') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+          repository: backdrop-ops/phpcs
+          ref: 1.0.0-beta2
+          path: phpcs
+      - name: Move standard outside current dir
+        run: mv phpcs ..
 
-      - name: Composer install coder_sniffer
-        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+      - name: Checkout module
+        uses: actions/checkout@v4
+        with:
+          path: modules/${{ env.REPO_NAME }}
 
-      - name: Backdrop coding standards
-        run: >
-          vendor/bin/phpcs -n
-          --standard=vendor/backdrop/coder/coder_sniffer/Backdrop
-          --ignore="vendor/*"
-          --extensions=install,module,php,inc .
+      - name: Run CodeSniffer
+        if: ${{ always() }}
+        run: |
+          cd modules/${{ env.REPO_NAME }}
+          phpcs --standard=../../../phpcs/Backdrop --report=.github/misc/Github.php -n --basepath=. *

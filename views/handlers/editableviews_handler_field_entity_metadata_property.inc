@@ -14,6 +14,9 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    */
   public $editable = TRUE;
 
+  /**
+ *
+ */
   public function option_definition() {
     $options = parent::option_definition();
 
@@ -24,6 +27,9 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     return $options;
   }
 
+  /**
+ *
+ */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
@@ -90,7 +96,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
       // Views AJAX magic which I don't pretend to understand, which allows a
       // dependent form element for 'reverse_boolean'.
       '#ajax' => array(
-        'path' => views_ui_build_form_url($form_state),
+        'path' => views_ui_build_form_path($form_state),
       ),
       '#submit' => array('views_ui_config_item_form_submit_temporary'),
       '#executes_submit_callback' => TRUE,
@@ -196,11 +202,11 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    * Create a textfield element.
    *
    * @param &$element
-   *  The element to alter.
+   *   The element to alter.
    * @param &$form_state
-   *  The form state.
+   *   The form state.
    * @param $wrapper
-   *  The wrapper for the entity whose property is to be shown in the element.
+   *   The wrapper for the entity whose property is to be shown in the element.
    */
   public function edit_form_element_textfield(&$element, &$form_state, $wrapper) {
     // Just do the same thing as node_content_form().
@@ -210,7 +216,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
       // The value might not be set in the case where we're on a non-required
       // relationship with empty data. TODO???
       '#default_value' => $wrapper->{$this->options['property']}->raw(),
-      //'#size' => $this->options['textfield_size'],
+      // '#size' => $this->options['textfield_size'],
       '#maxlength' => 255,
     );
   }
@@ -219,11 +225,11 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    * Create a select element.
    *
    * @param &$element
-   *  The element to alter.
+   *   The element to alter.
    * @param &$form_state
-   *  The form state.
+   *   The form state.
    * @param $wrapper
-   *  The wrapper for the entity whose property is to be shown in the element.
+   *   The wrapper for the entity whose property is to be shown in the element.
    */
   public function edit_form_element_select(&$element, &$form_state, $wrapper) {
     // Just do the same thing as node_content_form().
@@ -241,11 +247,11 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    * Create a checkbox element.
    *
    * @param &$element
-   *  The element to alter.
+   *   The element to alter.
    * @param &$form_state
-   *  The form state.
+   *   The form state.
    * @param $wrapper
-   *  The wrapper for the entity whose property is to be shown in the element.
+   *   The wrapper for the entity whose property is to be shown in the element.
    */
   public function edit_form_element_checkbox(&$element, &$form_state, $wrapper) {
     $default_value = $wrapper->{$this->options['property']}->raw();
@@ -293,7 +299,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
       $wrapper->{$this->options['property']}->set($value);
     }
     catch (EntityMetadataWrapperException $e) {
-      // TODO: the exception message from Entity API is not that end-user-friendly.
+      // TODO: the exception message from Entity is not end-user-friendly.
       form_error($element[$this->options['property']], $e->getMessage());
     }
   }

@@ -1,7 +1,12 @@
 <?php
 
 /**
+ * @file
  * Plugin class for the Editable Table style.
+ */
+
+/**
+ *
  */
 class editableviews_plugin_style_row_edit_table extends views_plugin_style_table {
 
@@ -16,6 +21,9 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $this->helper = new editableviews_style_helper($this);
   }
 
+  /**
+ *
+ */
   public function option_definition() {
     $options = parent::option_definition();
 
@@ -43,20 +51,19 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $this->helper->options_form($form, $form_state);
   }
 
+  /**
+ *
+ */
   public function validate() {
     $errors = parent::validate();
 
     $relationship_handlers = $this->display->handler->get_handlers('relationship');
     $field_handlers_grouped = $this->helper->get_editable_field_handlers_grouped();
-    //dsm($field_handlers_grouped);
-
     foreach ($relationship_handlers as $relationship_id => $relationship_handler) {
       // We don't care about required relationships.
       if ($relationship_handler->options['required']) {
         continue;
       }
-
-      //dsm($relationship_handler);
 
       // We don't care if there are no editable fields on the relationship.
       if (empty($field_handlers_grouped[$relationship_id])) {
@@ -143,10 +150,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
       // There's nothing to do!
       return;
     }
-    //dsm($edit_field_handlers, '$edit_field_handlers');
     $relationship_handlers = $this->display->handler->get_handlers('relationship');
-
-    //dsm($this->view->relationship);
 
     // Build an array of the field names to make editable.
     // The keys are the id keys of the Views handlers.
@@ -158,7 +162,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     $edit_field_handlers_grouped[$this->view->base_table] = array();
 
     foreach ($edit_field_handlers as $handler_id => $handler) {
-      //dsm($handler, "field handler $handler_id");
       $edit_fields[$handler_id] = $handler->field_name();
 
       // Build an array of handlers grouped by relationship ID.
@@ -216,9 +219,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         $result_indexes_reverse[$relationship_id][$index] = array($entity_type, $entity_id);
       }
     }
-    //dsm($result_entities, '$result_entities');
-    //dsm($result_indexes_reverse, '$result_indexes_reverse');
-
     // Make a combined array of coordinate lookups, both forward and reverse.
     // TODO: eventually replace everything to work with this arrays instead of
     // the two separate ones.
@@ -254,8 +254,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
         $result_entity_ids[$index][$handler_id] = $result_indexes_reverse[$field_handler_relationship_id][$index];
       }
     }
-    //dsm($result_entity_ids, '$result_entity_ids');
-
     // Now we have built up all our entities, go over them again and add
     // the connecting properties to any new ones.
     // In other words:
@@ -267,8 +265,6 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
     // Here we figure out the id we need to point to, and the property to point
     // to it in.
     $this->helper->connect_new_entities($result_entities, $results_coordinates, $edit_field_handlers_grouped);
-    //dsm($result_entities, '$result_entities post connect');
-
     // Load up the form render array.
     $this->get_form($result_entities, $results_coordinates, $edit_field_handlers_grouped);
 
@@ -304,21 +300,21 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
    * Helper method. Retrieves the form render array.
    *
    * @param $entities
-   *  An array of entities to get the form for, keyed first by entity type and
-   *  then by entity id.
+   *   An array of entities to get the form for, keyed first by entity type and
+   *   then by entity id.
    * @param $results_coordinates
-   *  An array containing coordinates lookups for getting entity type and entity
-   *  from row id and relationship, and the same the other way round. Contains:
-   *  - 'entities_to_results': A nested array keyed by entity type then entity
+   *   An array containing coordinates lookups for getting entity type and entity
+   *   from row id and relationship, and the same the other way round. Contains:
+   *   - 'entities_to_results': A nested array keyed by entity type then entity
    *    id. The final values are flat arrays of the relationship id and result
    *    index.
-   *  - 'results_to_entities': A nested array keyed by relationship id then
+   *   - 'results_to_entities': A nested array keyed by relationship id then
    *    result index. The final values are flat arrays of the entity type and
    *    entity id.
    * @param $edit_field_handlers
-   *  An array of field handlers to provide form elements for, grouped by
-   *  their relationship.
-   *  See editableviews_entity_form() for details.
+   *   An array of field handlers to provide form elements for, grouped by
+   *   their relationship.
+   *   See editableviews_entity_form() for details.
    */
   public function get_form($entities, $results_coordinates, $edit_field_handlers) {
     // Create a dynamic form ID using the base name (for quick recognition
@@ -376,6 +372,9 @@ class editableviews_style_helper {
    */
   public $relationship_entity_fields = array();
 
+  /**
+ *
+ */
   public function __construct(&$plugin) {
     $this->plugin = &$plugin;
   }
@@ -406,7 +405,6 @@ class editableviews_style_helper {
       }
 
       // Argh, do we need to contend with the alias of the relationship here??
-
       // Skip a relationship that is required: these will never provide an empty
       // row, and so never require entity creation.
       if ($relationship_handlers[$relationship_id]->options['required']) {
@@ -522,8 +520,6 @@ class editableviews_style_helper {
     // Now the relationships.
     $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
     foreach ($relationship_handlers as $relationship_id => $relationship_handler) {
-      //dsm($relationship_handler, $relationship_id);
-
       // The 'base' of a relationship is the table it brings.
       $table = $relationship_handler->definition['base'];
       // Get the entity type from the table.
@@ -536,24 +532,18 @@ class editableviews_style_helper {
 
       // Get the entity type and the views field that corresponds to the entity
       // id from the table definition.
-      //dsm($table_data['table'], 'table data');
       $entity_type = $table_data['table']['entity type'];
       $entity_id_field = $table_data['table']['base']['field'];
 
-      // Force the 're
       if ($relationship_handler->options['relationship'] == 'none') {
         $relationship_relationship = $base_table;
       }
       else {
         $relationship_relationship = $relationship_handler->options['relationship'];
       }
-      //dsm($relationship_relationship, '$relationship_relationship');
-
       // We want the alias for the table the relationship brings, not the table
       // it sits on.
       $table_alias = $relationship_handler->alias;
-      //dsm("$relationship_id brings $entity_type, $entity_id_field.\ntable alias is $table_alias");
-
       $entity_id_field_alias = $this->plugin->view->query->add_field($table_alias, $entity_id_field);
 
       $this->relationship_entity_fields[$relationship_id] = array(
@@ -561,7 +551,6 @@ class editableviews_style_helper {
         'id_field_alias' => $entity_id_field_alias,
       );
     }
-    //dsm($this->relationship_entity_fields);
   }
 
   /**
@@ -573,7 +562,7 @@ class editableviews_style_helper {
    * if the user enters data.
    *
    * @param $relationship_id
-   *  The id of the relationship that requires a new entity.
+   *   The id of the relationship that requires a new entity.
    *
    * @return
    *   A new, unsaved entity. The entity type is implied by the handler, and
@@ -634,20 +623,17 @@ class editableviews_style_helper {
    * entity.
    *
    * @param $result_entities
-   *  The array of result entities from the style plugin. Passed by reference
-   *  so the entities can be altered. (TODO: is this actually needed??)
+   *   The array of result entities from the style plugin. Passed by reference
+   *   so the entities can be altered. (TODO: is this actually needed??)
    * @param $results_coordinates
-   *  The combined coordinates array, containing both the forward and reverse
-   *  lookups for entities and results.
+   *   The combined coordinates array, containing both the forward and reverse
+   *   lookups for entities and results.
    * @see editableviews_plugin_style_row_edit_table::get_form() for details.
    * @param $edit_field_handlers_grouped
-   *  The edit field handlers, grouped by relationship handler ID.
+   *   The edit field handlers, grouped by relationship handler ID.
    */
   public function connect_new_entities(&$result_entities, $results_coordinates, $edit_field_handlers_grouped) {
     $relationship_handlers = $this->plugin->display->handler->get_handlers('relationship');
-
-    //dsm($edit_field_handlers_grouped);
-    //dsm($result_entities);
 
     foreach (array_keys($result_entities) as $entity_type) {
       foreach ($result_entities[$entity_type] as $entity_id => $entity) {
@@ -657,8 +643,6 @@ class editableviews_style_helper {
           list($relationship_id, $index) = $results_coordinates['entities_to_results'][$entity_type][$entity_id];
 
           $relationship_handler = $relationship_handlers[$relationship_id];
-          //dsm($relationship_handler);
-
           // Get the relationship that the relationship is on, so we can then
           // get the entity for that relationship.
           if (isset($relationship_handler->relationship)) {
@@ -696,7 +680,6 @@ class editableviews_style_helper {
             // Would be nice to factor this out to a helper method, say
             // '$this->new_entity_set_reverse_connection()' but we'd need to
             // pass so many variables it's probably just as faffy.
-
             // Get the entity out of the imaginary Views grid that is on the same
             // row as us, and in the $relationship_relationship relationship...
             list($referred_entity_type, $referred_entity_id) = $results_coordinates['results_to_entities'][$relationship_relationship][$index];
@@ -724,7 +707,6 @@ class editableviews_style_helper {
 
     $editable_field_handlers_grouped = array();
     foreach ($editable_field_handlers as $field_handler_id => $field_handler) {
-      //dsm($field_handler, '$field_handler');
       $relationship_id = $field_handler->options['relationship'];
       if ($relationship_id == 'none') {
         // TODO: tidy up this WTF!

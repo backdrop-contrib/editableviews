@@ -13,6 +13,9 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
    */
   public $editable = TRUE;
 
+  /**
+ *
+ */
   public function option_definition() {
     $options = parent::option_definition();
 
@@ -22,6 +25,9 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
     return $options;
   }
 
+  /**
+ *
+ */
   public function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 

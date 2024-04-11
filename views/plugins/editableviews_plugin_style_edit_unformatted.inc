@@ -16,6 +16,9 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
     $this->helper = new editableviews_style_helper($this);
   }
 
+  /**
+ *
+ */
   public function option_definition() {
     $options = parent::option_definition();
 
@@ -38,6 +41,9 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
     $this->helper->options_form($form, $form_state);
   }
 
+  /**
+ *
+ */
   public function validate() {
     $errors = parent::validate();
 
@@ -279,7 +285,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
             $this->rendered_fields[$index][$handler_id] = $rendered_div;
           }
         }
-        $this->rendered_fields[$index][$handler_id] .= '<div class="views-row-edit-edit">' . drupal_render($this->form[$entity_type][$entity_id][$field_name]) . '</div>';
+        $this->rendered_fields[$index][$handler_id] .= '<div class="views-row-edit-edit">' . backdrop_render($this->form[$entity_type][$entity_id][$field_name]) . '</div>';
       }
     }
   }
@@ -288,21 +294,21 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
    * Helper method. Retrieves the form render array.
    *
    * @param $entities
-   *  An array of entities to get the form for, keyed first by entity type and
-   *  then by entity id.
+   *   An array of entities to get the form for, keyed first by entity type and
+   *   then by entity id.
    * @param $results_coordinates
-   *  An array containing coordinates lookups for getting entity type and entity
-   *  from row id and relationship, and the same the other way round. Contains:
-   *  - 'entities_to_results': A nested array keyed by entity type then entity
+   *   An array containing coordinates lookups for getting entity type and entity
+   *   from row id and relationship, and the same the other way round. Contains:
+   *   - 'entities_to_results': A nested array keyed by entity type then entity
    *    id. The final values are flat arrays of the relationship id and result
    *    index.
-   *  - 'results_to_entities': A nested array keyed by relationship id then
+   *   - 'results_to_entities': A nested array keyed by relationship id then
    *    result index. The final values are flat arrays of the entity type and
    *    entity id.
    * @param $edit_field_handlers
-   *  An array of field handlers to provide form elements for, grouped by
-   *  their relationship.
-   *  See editableviews_entity_form() for details.
+   *   An array of field handlers to provide form elements for, grouped by
+   *   their relationship.
+   *   See editableviews_entity_form() for details.
    */
   public function get_form($entities, $results_coordinates, $edit_field_handlers) {
     // Create a dynamic form ID using the base name (for quick recognition
@@ -313,7 +319,7 @@ class editableviews_plugin_style_edit_unformatted extends views_plugin_style_def
     $form_id = 'editableviews_entity_form' . '_' . $this->view->name;
 
     // We store this rather than return it, as it's used in different places.
-    $this->form = drupal_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
+    $this->form = backdrop_get_form($form_id, $entities, $results_coordinates, $edit_field_handlers, $this->view);
   }
 
   /**
