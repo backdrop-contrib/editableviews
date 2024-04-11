@@ -23,6 +23,8 @@ class EditableViewsBaseWebTestCase extends BackdropWebTestCase {
       'entityreference',
       'editableviews_test',
     ));
+
+    return TRUE;
   }
 
 }
