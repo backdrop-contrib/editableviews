@@ -136,10 +136,10 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
    *
    * Override this as otherwise we'd just output the entity ID all the time.
    *
-   * @param array $values
+   * @param $values
    *   The values retrieved from the database.
    */
-  public function render(array $values) {
+  public function render($values) {
     // Don't return anything. We don't know the entity we're on at this point.
     // TODO: split up insert_form_elements() to do all the joining up of data
     // before parent::render_fields() is called, and set the entity on the
@@ -201,14 +201,14 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
   /**
    * Create a textfield element.
    *
-   * @param array &$element
+   * @param &$element
    *   The element to alter.
-   * @param array &$form_state
+   * @param &$form_state
    *   The form state.
-   * @param object $wrapper
+   * @param $wrapper
    *   The wrapper for the entity whose property is to be shown in the element.
    */
-  public function edit_form_element_textfield(array &$element, array &$form_state, $wrapper) {
+  public function edit_form_element_textfield(&$element, &$form_state, $wrapper) {
     // Just do the same thing as node_content_form().
     $element[$this->options['property']] = array(
       '#type' => 'textfield',

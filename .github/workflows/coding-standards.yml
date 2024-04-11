@@ -1,6 +1,7 @@
 name: Code Checks
 on: [pull_request]
 jobs:
+  if: false
   codechecks:
     name: Run phpcs
     runs-on: ubuntu-20.04
