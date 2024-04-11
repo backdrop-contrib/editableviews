@@ -76,7 +76,7 @@
             "table": "node",
             "field": "type",
             "value": {
-              "editable_views_test_node": "editable_views_test_node"
+              "editable_views_tests": "editable_views_tests"
             }
           }
         }

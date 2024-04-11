@@ -83,11 +83,31 @@
           }
         },
         "sorts": {
-          "created": {
-            "id": "created",
+          "title": {
+            "id": "title",
             "table": "node",
-            "field": "created",
-            "order": "DESC"
+            "field": "title",
+            "relationship": "none",
+            "group_type": "group",
+            "ui_name": "",
+            "order": "ASC",
+            "exposed": false,
+            "expose": {
+              "label": ""
+            }
+          },
+          "title_1": {
+            "id": "title_1",
+            "table": "node",
+            "field": "title",
+            "relationship": "reverse_field_test_node_reference_node",
+            "group_type": "group",
+            "ui_name": "",
+            "order": "ASC",
+            "exposed": false,
+            "expose": {
+              "label": ""
+            }
           }
         },
         "filters": {
@@ -106,7 +126,7 @@
             "table": "node",
             "field": "type",
             "value": {
-              "editable_views_test_node": "editable_views_test_node"
+              "editable_views_tests": "editable_views_tests"
             }
           }
         }

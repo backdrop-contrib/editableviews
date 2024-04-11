@@ -52,35 +52,35 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
 
     // Check both nodes are shown in the view form.
     $first_node_title_element_name = "node[{$first_node->nid}][title]";
+    $first_node_title_new = $this->randomName();
     $this->assertFieldByName($first_node_title_element_name, $first_node_title, t("View shows an edit form for the first node's title."));
 
     $second_node_title_element_name = "node[{$second_node->nid}][title]";
+    $second_node_title_new = $this->randomName();
     $this->assertFieldByName($second_node_title_element_name, $second_node_title, t("View shows an edit form for the second node's title."));
 
     // Save the form with changes to both nodes.
     $edit = array(
-      $first_node_title_element_name  => $this->randomName(),
-      $second_node_title_element_name => $this->randomName(),
+      $first_node_title_element_name  => $first_node_title_new,
+      $second_node_title_element_name => $second_node_title_new,
     );
     $this->backdropPost('test-editable-views-node-title', $edit, t('Save'));
 
     // Load the nodes again and check their titles have changed.
-    entity_get_controller('node')->resetCache();
+    entity_get_controller('node')->resetCache(array($first_node->nid, $second_node->nid));
     $first_node   = node_load($first_node->nid);
     $second_node  = node_load($second_node->nid);
 
-    $this->assertEqual($first_node->title, $edit[$first_node_title_element_name], t("The first node's title has been changed by saving the editable view."));
-    $this->assertEqual($second_node->title, $edit[$second_node_title_element_name], t("The second node's title has been changed by saving the editable view."));
+    $this->assertEqual($first_node->title, $first_node_title_new, t("The first node's title has been changed by saving the editable view."));
+    $this->assertEqual($second_node->title, $second_node_title_new, t("The second node's title has been changed by saving the editable view."));
 
     // Save the form again, with changes to just one node.
-    $edit = array(
-      $first_node_title_element_name  => $this->randomName(),
-    );
+    $edit[$first_node_title_element_name] = $this->randomName();
     $second_node_title_old = $second_node->title;
     $this->backdropPost('test-editable-views-node-title', $edit, t('Save'));
 
     // Load the nodes again and check their titles.
-    entity_get_controller('node')->resetCache();
+    entity_get_controller('node')->resetCache(array($first_node->nid, $second_node->nid));
     $first_node   = node_load($first_node->nid);
     $second_node  = node_load($second_node->nid);
 
@@ -150,7 +150,6 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
     $this->assertNoText('Text may not be "banana" (error 2).', "The form error message is shown only once.");
 
     // Neither node should be saved.
-    entity_get_controller('node')->resetCache();
     $first_node = node_load($first_node->nid);
     $first_node_wrapper = entity_metadata_wrapper('node', $first_node);
 
@@ -164,13 +163,13 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
 
     // Save the form again, this time without a bad value.
     $edit = array(
-      "node[{$first_node->nid}][field_test_editable_text][und][0][value]"   => $new_value_field_test_editable_text,
-      "node[{$first_node->nid}][field_test_editable_options][und]"          => $new_value_field_test_editable_options,
+      "node[{$first_node->nid}][field_test_editable_text][und][0][value]" => $new_value_field_test_editable_text,
+      "node[{$first_node->nid}][field_test_editable_options][und]" => $new_value_field_test_editable_options,
     );
     $this->backdropPost('test-editable-views-node-fields', $edit, t('Save'));
 
     // The first node should be saved and have new data in its fields.
-    entity_get_controller('node')->resetCache();
+    entity_get_controller('node')->resetCache(array($first_node->nid));
     $first_node = node_load($first_node->nid);
     $first_node_wrapper = entity_metadata_wrapper('node', $first_node);
 
@@ -232,7 +231,6 @@ class EditableViewsBasicWebTestCase extends EditableViewsBaseWebTestCase {
     );
     $this->backdropPost('test-editable-views-node-properties', $edit, t('Save'));
 
-    entity_get_controller('node')->resetCache();
     $first_node = node_load($first_node->nid);
 
     $this->assertEqual($first_node->status, FALSE, t("The node's 'status' property is set to the new value by saving the view."));
@@ -270,11 +268,19 @@ class EditableViewsEntityReferenceWebTestCase extends EditableViewsBaseWebTestCa
     $first_pointer_node = $this->backdropCreateNode(array(
       'title' => $first_pointer_node_title,
       'type'  => 'editable_views_test_referencing',
-      'field_test_node_reference' => array(LANGUAGE_NONE => array(array('target_id' => $first_node->nid))),
+      'field_test_node_reference' => array(
+        LANGUAGE_NONE => array(
+          array(
+            'target_id' => $first_node->nid,
+          ),
+        ),
+      ),
     ));
 
     // Look at the editable view.
     $this->backdropGet('test_editable_views_node_referenced_backwards_title');
+
+    $this->verbose('Form elements: ' . print_r($this->xpath('//form'), TRUE));
 
     // Check there are form elements for all three nodes' titles as well as the
     // empty node.
@@ -294,9 +300,10 @@ class EditableViewsEntityReferenceWebTestCase extends EditableViewsBaseWebTestCa
 
     // Change the titles of the referencing nodes, i.e., the second field in the
     // view. This will create a new node.
+    $new_node_title = $this->randomName();
     $edit = array(
-      $first_pointer_node_title_element_name  => $this->randomName(),
-      $empty_node_title_element_name          => $this->randomName(),
+      $first_pointer_node_title_element_name => $this->randomName(),
+      $empty_node_title_element_name => $new_node_title,
     );
     $this->backdropPost('test_editable_views_node_referenced_backwards_title', $edit, t('Save'));
 
@@ -309,12 +316,15 @@ class EditableViewsEntityReferenceWebTestCase extends EditableViewsBaseWebTestCa
     $query = new EntityFieldQuery();
     $entities = $query->entityCondition('entity_type', 'node')
       ->propertyCondition('type', 'editable_views_test_referencing')
-      ->propertyCondition('title', $edit[$empty_node_title_element_name])
+      ->propertyCondition('title', $new_node_title)
+      ->range(0,1)
       ->execute();
 
     $this->assertFalse(empty($entities['node']), t("A new referencing node has been created."));
 
-    $second_pointer_node = node_load(array_shift(array_keys($entities['node'])));
+    $nids = array_keys($entities['node']);
+    $nid = !empty($entities['node']) ? array_shift($nids) : 0;
+    $second_pointer_node = node_load($nid);
 
     $this->assertEqual($second_pointer_node->title, $edit[$empty_node_title_element_name], t("The second referencing node's title has been set by saving the editable view."));
 
@@ -390,7 +400,9 @@ class EditableViewsEntityReferenceWebTestCase extends EditableViewsBaseWebTestCa
 
     $this->assertFalse(empty($entities['node']), t("A new referenced node has been created."));
 
-    $second_pointed_node = node_load(array_shift(array_keys($entities['node'])));
+    $nids = array_keys($entities['node']);
+    $nid = array_shift($nids);
+    $second_pointed_node = node_load($nid);
 
     $this->assertEqual($second_pointed_node->title, $edit[$empty_node_title_element_name], t("The second referenced node's title has been set by saving the editable view."));
 

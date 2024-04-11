@@ -16,11 +16,19 @@
     "description": "",
     "required": 0,
     "deleted": 0,
-    "default_value": null,
+    "default_value": [
+        {
+            "value": "",
+            "format": "full_html"
+        }
+    ],
     "default_value_function": null,
     "settings": {
-        "text_processing": "1",
-        "allowed_formats": [],
+        "text_processing": "0",
+        "allowed_formats": [
+            "full_html",
+            "plain_text"
+        ],
         "user_register_form": false
     },
     "display": {
