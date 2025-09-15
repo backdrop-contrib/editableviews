@@ -22,6 +22,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
 
     $options['property'] = array('default' => NULL);
     $options['form_use_label'] = array('default' => FALSE);
+    $options['suppress_label'] = array('default' => FALSE);
     $options['reverse_boolean'] = array('default' => FALSE);
 
     return $options;
@@ -109,6 +110,13 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
       '#default_value' => $this->options['form_use_label'],
     );
 
+    $form['suppress_label'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide widget label'),
+      '#description' => t('If selected, the label on field widget is hidden. (If the field is required, the * will still show.)'),
+      '#default_value' => $this->options['suppress_label'],
+    );
+
     if ($this->options['property']) {
       $entity_all_property_info = entity_plus_get_all_property_info($table_data['table']['entity type']);
       $selected_property_info = $entity_all_property_info[$this->options['property']];
@@ -190,7 +198,10 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     }
 
     // Set the title property.
-    if ($this->options['form_use_label']) {
+    if($this->options['suppress_label']) {
+      $element[$this->options['property']]['#title'] = '';
+    }
+    else if ($this->options['form_use_label']) {
       $element[$this->options['property']]['#title'] = $this->options['label'];
     }
     else {

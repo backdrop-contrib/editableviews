@@ -20,6 +20,7 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
     $options = parent::option_definition();
 
     $options['textfield_size'] = array('default' => NULL);
+    $options['suppress_label'] = array('default' => FALSE);
     $options['suppress_value'] = array('default' => FALSE);
 
     return $options;
@@ -45,6 +46,13 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
       '#description' => t('If selected, only the field input widget will be shown.'),
       '#default_value' => $this->options['suppress_value'],
     );
+
+    $form['suppress_label'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Hide widget label'),
+      '#description' => t('If selected, the label on field widget is hidden. (If the field is required, the * will still show.)'),
+      '#default_value' => $this->options['suppress_label'],
+    );
   }
 
   /**
@@ -62,7 +70,7 @@ class editableviews_handler_field_node_title_edit extends views_handler_field_no
     $type = node_type_get_type($entity);
     $element['title'] = array(
       '#type' => 'textfield',
-      '#title' => check_plain($type->title_label),
+      '#title' => !empty($this->options['suppress_label']) ? '' : check_plain($type->title_label),
       // This is required on existing entities, but not on new ones to allow
       // the user to not create the new entity.
       // Obviously, problems arise when there are multiple editable fields on
