@@ -357,6 +357,7 @@ class editableviews_plugin_style_row_edit_table extends views_plugin_style_table
  * This abstracts out a number of things the style plugin needs to do, in order
  * that other style plugins can use them too.
  */
+#[\AllowDynamicProperties]
 class editableviews_style_helper {
 
   /**
