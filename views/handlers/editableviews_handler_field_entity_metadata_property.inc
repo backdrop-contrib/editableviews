@@ -35,7 +35,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
 
     $table_data = views_fetch_data($this->table);
     $entity_info = entity_get_info($table_data['table']['entity type']);
-    $entity_property_info = entity_get_property_info($table_data['table']['entity type']);
+    $entity_property_info = entity_plus_get_property_info($table_data['table']['entity type']);
 
     // Create an array of grouped options.
     $options = array();
@@ -110,7 +110,7 @@ class editableviews_handler_field_entity_metadata_property extends views_handler
     );
 
     if ($this->options['property']) {
-      $entity_all_property_info = entity_get_all_property_info($table_data['table']['entity type']);
+      $entity_all_property_info = entity_plus_get_all_property_info($table_data['table']['entity type']);
       $selected_property_info = $entity_all_property_info[$this->options['property']];
 
       if ($selected_property_info['type'] == 'boolean') {
